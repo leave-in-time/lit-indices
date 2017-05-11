@@ -8,6 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Room from './components/Room';
 import Display from './components/Display';
+import Start from './components/Start';
 
 const browserHistory = createBrowserHistory();
 
@@ -17,6 +18,7 @@ const Routes = (props) => (
 			<div>
 				<Route path="/admin/:roomId" component={Room} />
                 <Route path="/display/:roomId" component={Display} />
+                <Route path="/start" component={Start} />
 			</div>
 		</MuiThemeProvider>
 	</Router>

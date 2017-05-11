@@ -16,6 +16,13 @@ class Clock extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		this.clock.setTime(nextProps.time);
+	}
+
+	shouldComponentUpdate(nextProps) {
+		return this.props.time !== nextProps.time;
+	}
+
+	componentWillUpdate() {
 		this.clock.flip();
 		this.tick.play();
 	}

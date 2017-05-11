@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 
-import conf from '../../services/conf';
 import Clock from '../Clock';
+import Clue from '../Clue';
 
 import './style.css';
 
@@ -13,12 +13,10 @@ class Display extends Component {
 		this.socket = io('http://localhost:3030');
 		this.socket.on('clue', (clue) => {
 			this.setState({ clue });
+			// TODO: clear the clue
 		});
 		this.socket.on('clock', (time) => {
 			this.setState({ time });
-		});
-		conf((conf) => {
-			console.log(conf);
 		});
 	}
 
@@ -35,15 +33,14 @@ class Display extends Component {
 	}
 
 	render() {
-		// const test = (this.state.clue) ? <video autoPlay src={`../uploads/${this.state.clue.fileName}`}/> : null;
 		return (
 			<div id="display">
 				<Clock
-					time={this.state.time}
+					time={this.state.time || 3600}
 					orange={900}
 					red={120}
 				/>
-				<div className="clue-holder"></div>
+				<Clue clue={this.state.clue} />
 			</div>
 		);
 	}
