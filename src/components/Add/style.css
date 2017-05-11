@@ -1,0 +1,22 @@
+.add {
+	position: absolute;
+	top: 15px;
+	right: 19px;
+}
+
+.a-input-file {
+	margin-left: 12px;
+}
+
+.a-input-file input[type="file"] {
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.a-input-desc {
+	display: block!important;
+}

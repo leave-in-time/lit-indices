@@ -1,0 +1,18 @@
+.timer {
+	line-height: 64px;
+	color: white;
+	font-weight: 500;
+	font-size: 32px;
+}
+
+.timer svg {
+	color: white!important;
+}
+
+.timer-field {
+	width: 90px!important
+}
+
+.timer-separator {
+	margin: 0 12px;
+}

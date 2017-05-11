@@ -1,0 +1,9 @@
+.title {
+	padding-bottom: .3em;
+	font-size: 1.5em;
+	line-height: 1.4;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 16px;
+	font-weight: 400;
+	color: rgba(0,0,0,.87);
+}

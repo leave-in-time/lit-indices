@@ -1,0 +1,5 @@
+export default {
+	GET_CLUES: 'GET_CLUES',
+	ADD_CLUE: 'ADD_CLUE',
+	REMOVE_CLUE: 'REMOVE_CLUE',
+};

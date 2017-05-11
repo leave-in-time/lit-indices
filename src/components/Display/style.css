@@ -1,0 +1,17 @@
+#display {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	overflow: hidden;
+	background-color: #263238;
+}
+
+.clue-holder {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	flex: 1;
+}

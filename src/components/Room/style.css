@@ -1,0 +1,28 @@
+.container {
+	padding: 20px;
+}
+
+.medias {
+	display: flex;
+	height: calc(80vh - 64px);
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.content {
+	flex-basis: 50%;
+	height: 50%;
+	position: relative;
+}
+
+.free-text {
+	height: 20vh;
+}
+
+.input {
+	width: calc(100% - 200px)!important;
+}
+
+.button {
+	margin-left: 12px;
+}

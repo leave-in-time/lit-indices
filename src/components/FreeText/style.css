@@ -1,0 +1,12 @@
+.ft-container {
+	height: 20vh;
+	padding: 20px;
+}
+
+.ft-input {
+	width: calc(100% - 200px)!important;
+}
+
+.ft-button {
+	margin-left: 12px;
+}

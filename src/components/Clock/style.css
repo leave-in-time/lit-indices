@@ -1,0 +1,29 @@
+#clock {
+	zoom: 3;
+	display: flex;
+	justify-content: center;
+	margin: 20px 0;
+}
+
+#clock .flip-clock-label {
+	display: none;
+}
+
+#clock .flip-clock-dot,
+#clock .flip .inn {
+	background-color: #19c37e;
+}
+
+#clock.orange .flip-clock-dot,
+#clock.orange .flip .inn {
+	background-color: #c37919;
+}
+
+#clock.red .flip-clock-dot,
+#clock.red .flip .inn {
+	background-color: #980f0f;
+}
+
+#clock .flip .up::after {
+	background-color: rgba(0, 0, 0, 0);
+}
