@@ -12,8 +12,8 @@ class Display extends Component {
 		this.state = { clue: null };
 		this.socket = io('http://localhost:3030');
 		this.socket.on('clue', (clue) => {
+			if (clue.type) this.bell.play();
 			this.setState({ clue });
-			// TODO: clear the clue
 		});
 		this.socket.on('clock', (time) => {
 			this.setState({ time });
@@ -38,9 +38,10 @@ class Display extends Component {
 				<Clock
 					time={this.state.time || 3600}
 					orange={900}
-					red={120}
+					red={300}
 				/>
 				<Clue clue={this.state.clue} />
+				<audio src="../fx/bell.mp3" ref={(c) => this.bell = c} />
 			</div>
 		);
 	}

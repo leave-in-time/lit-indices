@@ -17,8 +17,14 @@ class FreeText extends Component {
 	handleChange = (event) => this.setState({ value: event.target.value });
 	handleClear = () => this.setState({ value: '' });
 	handleSend = () => {
-		if (this.state.value.length) console.log(this.state.value);
-		this.setState({ value: '' });
+		if (this.state.value.length) {
+			this.props.socket.emit('send clue', {
+				type: 'text',
+				description: this.state.value,
+				roomId: this.props.roomId
+			});
+			this.setState({ value: '' });
+		}
 	}
 
 	render() {

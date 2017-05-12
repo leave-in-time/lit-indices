@@ -90,9 +90,9 @@ class Conf extends Component {
 			<div className="conf">
 				<IconButton
 					iconStyle={{ width: 24, height: 24 }}
-					tooltip="configurer l'écran"
+					tooltip={this.props.admin && 'configurer l\'écran'}
 					tooltipPosition="bottom-right"
-					onTouchTap={this.handleClick}
+					onTouchTap={this.props.admin ? this.handleClick : () => null}
 				>
 					<ActionSettings />
 				</IconButton>
@@ -122,6 +122,7 @@ class Conf extends Component {
 						hintText="Veuillez saisir l'ip de l'écran"
 						value={this.state.ip}
 						onChange={this.handleIpChange}
+						ref={(c) => {if (c) c.focus()}}
 						className="c-input-desc"
 					/>
 				</Dialog>

@@ -130,6 +130,7 @@ class Add extends Component {
 						hintText="Veuillez saisir votre texte"
 						value={this.state.description}
 						onChange={this.handleDescriptionChange}
+						ref={(c) => {if (c) c.focus()}}
 						className="a-input-desc"
 					/>
 				</Dialog>

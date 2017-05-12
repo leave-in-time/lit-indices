@@ -26,3 +26,8 @@
 .button {
 	margin-left: 12px;
 }
+
+.r-clear {
+	flex: 1;
+	margin-top: 12px!important;
+}

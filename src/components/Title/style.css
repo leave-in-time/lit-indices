@@ -7,3 +7,20 @@
 	font-weight: 400;
 	color: rgba(0,0,0,.87);
 }
+
+.slider-holder {
+	display: inline-block;
+	width: 80px;
+	background-color: white;
+	margin-left: 12px;
+	border-radius: 2px;
+}
+
+.slider-holder div div {
+	margin: 0!important;
+}
+
+.slider-holder div[tabindex] {
+	background-color: rgb(255, 64, 129)!important;
+	top: 1px!important;
+}

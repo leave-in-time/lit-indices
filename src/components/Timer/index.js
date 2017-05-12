@@ -3,6 +3,7 @@ import IconButton from 'material-ui/IconButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import Slider from 'material-ui/Slider';
 import Play from 'material-ui/svg-icons/av/play-arrow';
 import Replay from 'material-ui/svg-icons/av/replay';
 import Pause from 'material-ui/svg-icons/av/pause';
@@ -20,7 +21,8 @@ class Timer extends Component {
 			running: false,
 			dialog: false,
 			toBeSec: '',
-			toBeMin: ''
+			toBeMin: '',
+			volume: 100
 		};
 	}
 
@@ -90,6 +92,14 @@ class Timer extends Component {
 		else this.setState({ toBeSec: parseInt(e.target.value, 10) });
 	}
 
+	handleChangeVolume = (e, v) => {
+		this.setState({ volume: v });
+	}
+
+	handleSendVolume = () => {
+		console.log(this.state.volume);
+	}
+
 	render() {
 		const actions = [
 			<FlatButton
@@ -127,6 +137,19 @@ class Timer extends Component {
 				>
 					<Edit />
 				</IconButton>
+				<span>{this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}</span>
+				<span>:</span>
+				<span>{this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}</span>
+				<div className="slider-holder">
+					<Slider
+						min={0}
+						max={100}
+						step={1}
+						value={this.state.volume}
+						onChange={this.handleChangeVolume}
+						onDragStop={this.handleSendVolume}
+					/>
+				</div>
 				<Dialog
 					title="Editer le timer"
 					actions={actions}
@@ -141,6 +164,7 @@ class Timer extends Component {
 						hintText="Minutes"
 						value={this.state.toBeMin}
 						onChange={this.handleMinutesChange}
+						ref={(c) => {if (c) c.focus()}}
 						className="timer-field"
 					/>
 					<span className="timer-separator">:</span>
@@ -154,9 +178,6 @@ class Timer extends Component {
 						className="timer-field"
 					/>
 				</Dialog>
-				<span>{this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}</span>
-				<span>:</span>
-				<span>{this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}</span>
 			</div>
 		);
 	}

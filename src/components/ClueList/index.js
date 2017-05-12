@@ -67,7 +67,10 @@ class ClueList extends Component {
 					) : (
 						null
 					)}
-					rightIcon={<ContentClear onTouchTap={this.handleClear.bind(this, clue._id)}/>}
+					rightIcon={this.props.admin ?
+						<ContentClear onTouchTap={this.handleClear.bind(this, clue._id)} /> :
+						null
+					}
 					onTouchTap={this.handleEmit.bind(this, clue)}
 				/>
 			);
