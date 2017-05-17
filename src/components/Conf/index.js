@@ -7,6 +7,7 @@ import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
 import FileFileUpload from 'material-ui/svg-icons/file/file-upload';
+import { SliderPicker } from 'react-color';
 
 import postConf from '../../services/postConf';
 import './style.css';
@@ -51,9 +52,11 @@ class Conf extends Component {
 		// contruct the clue
 		const data = {
 			ip: this.state.ip,
+			color: this.state.color,
 			roomId: this.props.roomId
 		};
 		if (this.state.file) data.newFile = this.state.file;
+		console.log(data);
 		// and post it to the server
 		postConf(data, (message) => {
 			this.setState({
@@ -71,6 +74,11 @@ class Conf extends Component {
 	handleSnackbarClose = () => {
 		this.setState({ snackbar: false, snackbarMessage: '' });
 	};
+
+	// choose the color
+	handleColor = (color, event) => {
+		this.setState({ color: color.hex });
+	}
 
 	render() {
 		const actions = [
@@ -103,7 +111,7 @@ class Conf extends Component {
 					open={this.state.dialog}
 				>
 					<TextField
-						hintText="Aucun fichier de sélectionné"
+						hintText="Fichier son d'indice"
 						value={this.state.fileName}
 						disabled
 					/>
@@ -114,7 +122,7 @@ class Conf extends Component {
 					>
 						<input
 							type="file"
-							accept="video/*"
+							accept="audio/*"
 							onChange={this.handleFileChange}
 						/>
 					</RaisedButton>
@@ -122,8 +130,11 @@ class Conf extends Component {
 						hintText="Veuillez saisir l'ip de l'écran"
 						value={this.state.ip}
 						onChange={this.handleIpChange}
-						ref={(c) => {if (c) c.focus()}}
 						className="c-input-desc"
+					/>
+					<SliderPicker
+						color={this.state.color}
+						onChangeComplete={this.handleColor}
 					/>
 				</Dialog>
 				<Snackbar

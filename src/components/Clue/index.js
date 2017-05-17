@@ -3,18 +3,6 @@ import React, { Component } from 'react';
 import './style.css';
 
 class Clue extends Component {
-	// constructor(props) {
-	// 	super(props);
-	// 	this.state = { shouldRenderClue: false };
-	// }
-	//
-	// componentDidUpdate() {
-	// 	this.setState({ shouldRenderClue: true });
-	// 	setTimeout(() => {
-	// 		this.setState({ shouldRenderClue: false });
-	// 	}, 5000);
-	// }
-
 	renderClue = () => {
 		if (!this.props.clue) return null;
 		switch (this.props.clue.type) {

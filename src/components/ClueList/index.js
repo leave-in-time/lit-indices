@@ -23,7 +23,8 @@ class ClueList extends Component {
 	}
 
 	handleEmit = (clue) => {
-		this.props.socket.emit('send clue', clue);
+		const channel = this.props.atmosphere ? 'send atmosphere' : 'send clue';
+		this.props.socket.emit(channel, clue);
 	}
 
 	// press for starting supression

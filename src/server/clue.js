@@ -4,7 +4,8 @@ const clueSchema = mongoose.Schema({
 	description: String,
 	type: String,
 	roomId: String,
-	fileName: String
+	fileName: String,
+	atmosphere: Boolean
 });
 
 const Clue = mongoose.model('Clue', clueSchema);

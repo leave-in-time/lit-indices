@@ -8,7 +8,7 @@ const postConf = (data, cb) => {
 	fetch(url, { method: 'POST', body: fd }).then((res) => {
 		res.json().then((json) => {
 			if (res.status === 200) {
-				cb('Configuration effectuée!')
+				cb('Configuration effectuée !')
 			}
 			else cb('Problème lors de la configuration, veuillez réessayer.');
 		});

@@ -12,25 +12,42 @@ import Timer from '../Timer';
 import Conf from '../Conf';
 
 import get from '../../services/get';
+import getConf from '../../services/getConf';
 
 import './style.css';
 
 class Room extends Component {
 	constructor(props) {
 		super(props);
-		this.socket = io('http://localhost:3030');
+		this.state = {
+			timer: false
+		};
 		this.admin = this.props.match.url.startsWith('/admin/');
+		this.socket = io('http://localhost:3030');
+		this.socket.on('start', () => {
+			this.setState({ timer: true });
+		});
+		this.socket.emit('admin', this.props.match.params.roomId);
 	}
 
 	componentDidMount() {
 		get(this.props.match.params.roomId);
+		getConf(this.props.match.params.roomId);
 	}
 
-	handleTimerClock = (time) => {
+	handleIntroStart = () => {
+		this.socket.emit('send intro', this.props.match.params.roomId);
+	}
+
+	handleTimerClock = (data) => {
 		this.socket.emit('send clock', {
 			roomId: this.props.match.params.roomId,
-			time
+			...data
 		});
+	}
+
+	handleTimerEnd = () => {
+		this.socket.emit('send end', this.props.match.params.roomId);
 	}
 
 	handleClearClue = () => {
@@ -39,9 +56,6 @@ class Room extends Component {
 		});
 	}
 
-	handleTimerEnd = () => {
-		console.log('end!!');
-	}
 
 	render() {
 		return (
@@ -52,20 +66,44 @@ class Room extends Component {
 						admin={this.admin}
 						roomId={this.props.match.params.roomId}
 					/>}
+					style={{ backgroundColor: (this.props.conf && this.props.conf.color) || 'rgb(0, 188, 212)' }}
+					className="r-bar"
 				>
 					<div className="r-clear">
 						<RaisedButton
-							label="Enelver l'indice"
+							label="Enelver l'indice/ambiance"
 							secondary
 							onTouchTap={this.handleClearClue}
 						/>
 					</div>
 					<Timer
+						introCallback={this.handleIntroStart}
 						clockCallback={this.handleTimerClock}
 						endCallback={this.handleTimerEnd}
+						timer={this.state.timer}
 					/>
 				</AppBar>
 				<div className="container medias">
+					<div className="content">
+						<Title title="Ambiance sonore" />
+						{this.admin && <Add atmosphere accept="audio" roomId={this.props.match.params.roomId} />}
+						<ClueList
+							socket={this.socket}
+							clues={this.props.clues.filter((e) => e.type === 'audio' && e.atmosphere) || []}
+							admin={this.admin}
+							atmosphere
+						/>
+					</div>
+					<div className="content">
+						<Title title="Ambiance video" />
+						{this.admin && <Add atmosphere accept="video" roomId={this.props.match.params.roomId} />}
+						<ClueList
+							socket={this.socket}
+							clues={this.props.clues.filter((e) => e.type === 'video' && e.atmosphere) || []}
+							admin={this.admin}
+							atmosphere
+						/>
+					</div>
 					<div className="content">
 						<Title title="Textes" />
 						{this.admin && <Add roomId={this.props.match.params.roomId} />}
@@ -89,7 +127,7 @@ class Room extends Component {
 						{this.admin && <Add accept="audio" roomId={this.props.match.params.roomId} />}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'audio') || []}
+							clues={this.props.clues.filter((e) => e.type === 'audio'  && !e.atmosphere) || []}
 							admin={this.admin}
 						/>
 					</div>
@@ -98,7 +136,7 @@ class Room extends Component {
 						{this.admin && <Add accept="video" roomId={this.props.match.params.roomId} />}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'video') || []}
+							clues={this.props.clues.filter((e) => e.type === 'video'  && !e.atmosphere) || []}
 							admin={this.admin}
 						/>
 					</div>

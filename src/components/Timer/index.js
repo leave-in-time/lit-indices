@@ -3,11 +3,14 @@ import IconButton from 'material-ui/IconButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import Slider from 'material-ui/Slider';
+import Start from 'material-ui/svg-icons/av/video-library';
+import End from 'material-ui/svg-icons/av/stop';
 import Play from 'material-ui/svg-icons/av/play-arrow';
-import Replay from 'material-ui/svg-icons/av/replay';
 import Pause from 'material-ui/svg-icons/av/pause';
+import Reset from 'material-ui/svg-icons/av/replay';
 import Edit from 'material-ui/svg-icons/image/edit';
+import Mute from 'material-ui/svg-icons/av/volume-off';
+import Unmute from 'material-ui/svg-icons/av/volume-up';
 
 import './style.css';
 
@@ -16,14 +19,44 @@ class Timer extends Component {
 		super(props);
 		// initial state
 		this.state = {
-			minutes: 0,
-			seconds: 10,
+			minutes: 60,
+			seconds: 0,
+			started: false,
 			running: false,
 			dialog: false,
 			toBeSec: '',
 			toBeMin: '',
-			volume: 100
+			muted: true,
+			nameDialog: false,
+			name: ''
 		};
+		// keep the display clock in sync
+		this.props.clockCallback({
+			time: this.state.minutes * 60 + this.state.seconds,
+			muted: this.state.muted
+		});
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.timer) this.handlePlayPause();
+	}
+
+	handleStartStop = () => {
+		if (this.state.started) {
+			clearInterval(this.interval);
+			this.setState({
+				started: false,
+				running: false,
+				muted: true,
+				nameDialog: false
+			});
+		}
+		else {
+			this.setState({
+				name: '',
+				nameDialog: true
+			});
+		}
 	}
 
 	handlePlayPause = () => {
@@ -37,14 +70,20 @@ class Timer extends Component {
 				if (time < 0) {
 					this.props.endCallback();
 					clearInterval(this.interval);
-					this.setState({ running: false });
+					this.setState({
+						started: false,
+						running: false
+					});
 				}
 				else {
 					this.setState({
 						minutes: Math.floor(time / 60),
 						seconds: time % 60
 					});
-					this.props.clockCallback(time);
+					this.props.clockCallback({
+						time,
+						muted: this.state.muted
+					});
 				}
 			}, 1000);
 			this.setState({ running: true });
@@ -52,73 +91,134 @@ class Timer extends Component {
 	}
 
 	handleReset = () => {
-		clearInterval(this.interval);
-		this.setState({
-			minutes: 60,
-			seconds: 0,
-			running: false
-		});
+		this.setState(
+			{
+				minutes: 60,
+				seconds: 0
+			},
+			() => {
+				this.props.clockCallback({
+					time: this.state.minutes * 60 + this.state.seconds,
+					muted: this.state.muted
+				});
+			}
+		);
 	}
 
 	handleEdit = () => {
 		this.setState({ dialog: true });
 	}
 
-	handleCloseDialog = () => {
+	handleCloseTimerDialog = () => {
 		this.setState({ dialog: false });
 	}
 
-	handleConfirmDialog = () => {
+	handleConfirmTimerDialog = () => {
 		const { toBeMin, toBeSec } = this.state;
-		this.setState({
-			minutes: toBeMin,
-			seconds: toBeSec,
-			dialog: false,
-			toBeMin: '',
-			toBeSec: ''
-		});
-		console.log(this.state);
+		this.setState(
+			{
+				minutes: toBeMin,
+				seconds: toBeSec,
+				dialog: false,
+				toBeMin: '',
+				toBeSec: ''
+			},
+			() => {
+				this.props.clockCallback({
+					time: this.state.minutes * 60 + this.state.seconds,
+					muted: this.state.muted
+				});
+			}
+		);
 	}
 
 	handleMinutesChange = (e) => {
-		if (e.target.value < 0) this.setState({ toBeMin: 0 });
-		else if (e.target.value > 240) this.setState({ toBeMin: 240 });
+		if (parseInt(e.target.value, 10) < 0) this.setState({ toBeMin: 0 });
+		else if (parseInt(e.target.value, 10)  > 98) this.setState({ toBeMin: 98 });
 		else this.setState({ toBeMin: parseInt(e.target.value, 10) });
 	}
 
 	handleSecondsChange = (e) => {
-		if (e.target.value < 0) this.setState({ toBeSec: 0 });
-		else if (e.target.value > 59) this.setState({ toBeSec: 59 });
+		if (parseInt(e.target.value, 10)  < 0) this.setState({ toBeSec: 0 });
+		else if (parseInt(e.target.value, 10)  > 59) this.setState({ toBeSec: 59 });
 		else this.setState({ toBeSec: parseInt(e.target.value, 10) });
 	}
 
-	handleChangeVolume = (e, v) => {
-		this.setState({ volume: v });
+	handleMute = () => {
+		this.setState({ muted: !this.state.muted });
 	}
 
-	handleSendVolume = () => {
-		console.log(this.state.volume);
+	handleName = (e) => {
+		this.setState({ name: e.target.value })
 	}
+
+	handleCloseNameDialog = () => {
+		this.setState({ nameDialog: false });
+	}
+
+	handleConfirmNameDialog = () => {
+		// TODO: handle stats
+		this.setState(
+			{
+				started: true,
+				nameDialog: false
+			},
+			() => {
+				this.props.introCallback();
+			}
+		);
+	}
+
+	// handleChangeVolume = (e, v) => {
+	// 	this.setState({ volume: v });
+	// }
+	//
+	// handleSendVolume = () => {
+	// 	console.log(this.state.volume);
+	// }
 
 	render() {
-		const actions = [
+		const timerActions = [
 			<FlatButton
 				label="Annuler"
 				secondary
-				onTouchTap={this.handleCloseDialog}
+				onTouchTap={this.handleCloseTimerDialog}
 			/>,
 			<FlatButton
 				label="Ok"
 				primary
 				disabled={this.state.toBeMin === '' || this.state.toBeSec === ''}
-				onTouchTap={this.handleConfirmDialog}
+				onTouchTap={this.handleConfirmTimerDialog}
+			/>,
+		];
+		const nameActions = [
+			<FlatButton
+				label="Annuler"
+				secondary
+				onTouchTap={this.handleCloseNameDialog}
+			/>,
+			<FlatButton
+				label="Ok"
+				primary
+				disabled={this.state.name === ''}
+				onTouchTap={this.handleConfirmNameDialog}
 			/>,
 		];
 		return (
 			<div className="timer">
 				<IconButton
-					tooltip={this.state.running ? 'Mettre en pause' : 'Démarrer'}
+					tooltip={this.state.started ? 'Terminer la partie' : 'Démarrer la partie'}
+					onTouchTap={this.handleStartStop}
+				>
+					{this.state.started ?
+						<End /> :
+						<Start />
+					}
+				</IconButton>
+				<IconButton
+					tooltip={this.state.running ? 'Pause' : 'Play'}
 					onTouchTap={this.handlePlayPause}
+					disabled={!this.state.started}
 				>
 					{this.state.running ?
 						<Pause /> :
@@ -126,13 +226,13 @@ class Timer extends Component {
 					}
 				</IconButton>
 				<IconButton
-					tooltip='Remise à zéro'
+					tooltip='Reset'
 					onTouchTap={this.handleReset}
 				>
-					<Replay />
+					<Reset />
 				</IconButton>
 				<IconButton
-					tooltip='Edition manuelle'
+					tooltip='Édition manuelle'
 					onTouchTap={this.handleEdit}
 				>
 					<Edit />
@@ -140,7 +240,16 @@ class Timer extends Component {
 				<span>{this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}</span>
 				<span>:</span>
 				<span>{this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}</span>
-				<div className="slider-holder">
+				<IconButton
+					tooltip={this.state.muted ? 'Allumer le tick d\'horloge' : 'Éteindre le tick d\'horloge'}
+					onTouchTap={this.handleMute}
+				>
+					{this.state.muted ?
+						<Unmute /> :
+						<Mute />
+					}
+				</IconButton>
+				{/* <div className="slider-holder">
 					<Slider
 						min={0}
 						max={100}
@@ -149,22 +258,21 @@ class Timer extends Component {
 						onChange={this.handleChangeVolume}
 						onDragStop={this.handleSendVolume}
 					/>
-				</div>
+				</div> */}
 				<Dialog
 					title="Editer le timer"
-					actions={actions}
+					actions={timerActions}
 					modal={false}
 					open={this.state.dialog}
-					onRequestClose={this.handleCloseDialog}
+					onRequestClose={this.handleCloseTimerDialog}
 				>
 					<TextField
 						type="number"
 						min="0"
-						max="240"
+						max="98"
 						hintText="Minutes"
 						value={this.state.toBeMin}
 						onChange={this.handleMinutesChange}
-						ref={(c) => {if (c) c.focus()}}
 						className="timer-field"
 					/>
 					<span className="timer-separator">:</span>
@@ -176,6 +284,18 @@ class Timer extends Component {
 						value={this.state.toBeSec}
 						onChange={this.handleSecondsChange}
 						className="timer-field"
+					/>
+				</Dialog>
+				<Dialog
+					title="Saisir votre nom"
+					actions={nameActions}
+					modal
+					open={this.state.nameDialog}
+				>
+					<TextField
+						hintText="Votre nom"
+						value={this.state.name}
+						onChange={this.handleName}
 					/>
 				</Dialog>
 			</div>

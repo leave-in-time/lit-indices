@@ -2,3 +2,7 @@
 	height: 80%;
 	overflow-y: scroll;
 }
+
+.cl-container > div {
+	padding: 0!important;
+}

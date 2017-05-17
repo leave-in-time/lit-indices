@@ -42,7 +42,6 @@ app.post('/api/upload/clue', (req, res) => {
 });
 
 // upload a new conf
-// TODO: erase previous one for the given IP
 app.post('/api/upload/conf', (req, res) => {
 	const form = new formidable.IncomingForm();
 	form.keepExtensions = true;
@@ -54,12 +53,15 @@ app.post('/api/upload/conf', (req, res) => {
 				{},
 				fields
 			);
-			if (files.newFile) values.fileName = path.basename(files.newFile.path);
-			const conf = new Conf(values);
-			conf.save((err, saved) => {
-				if (err) res.status(500).send(err);
-				else res.status(200).json(saved);
-			});
+			if (files.newFile) values.clueSound = path.basename(files.newFile.path);
+			Conf.remove({ ip: values.ip }, (err, result) => {
+				// TODO: handle error 500
+				const conf = new Conf(values);
+				conf.save((err, saved) => {
+					if (err) res.status(500).send(err);
+					else res.status(200).json(saved);
+				});
+			})
 		}
 	});
 });
@@ -71,6 +73,14 @@ app.get('/api/conf', (req, res) => {
 		res.status(200).send(conf);
 	});
 });
+
+// get room configuration
+app.get('/api/conf/:roomId', (req, res) => {
+	Conf.findOne({ roomId: req.params.roomId }, (err, conf) => {
+		res.status(200).send(conf || {});
+	});
+});
+
 // get clues for a given room
 app.get('/api/room/:roomId', (req, res) => {
 	Clue.find({ roomId: req.params.roomId }, (err, clues) => {
@@ -110,6 +120,10 @@ db.once('open', () => {
 	// ---------------------
 	const io = socketIO(server);
 	io.on('connection', (socket) => {
+		socket.on('admin', (roomId) => {
+			console.log(`An admin is joining admin-${roomId}`);
+			socket.join(`admin-${roomId}`);
+		});
 		socket.on('display', (roomId) => {
 			console.log(`A display is joining ${roomId}`);
 			socket.join(roomId);
@@ -118,11 +132,23 @@ db.once('open', () => {
 			console.log(`A display is leaving ${roomId}`);
 			socket.leave(roomId);
 		});
+		socket.on('send intro', (roomId) => {
+			socket.broadcast.to(roomId).emit('intro');
+		});
 		socket.on('send clue', (clue) => {
 			socket.broadcast.to(clue.roomId).emit('clue', clue);
 		});
+		socket.on('send atmosphere', (atmosphere) => {
+			socket.broadcast.to(atmosphere.roomId).emit('atmosphere', atmosphere);
+		});
 		socket.on('send clock', (data) => {
-			socket.broadcast.to(data.roomId).emit('clock', data.time);
+			socket.broadcast.to(data.roomId).emit('clock', data);
+		});
+		socket.on('send end', (roomId) => {
+			socket.broadcast.to(roomId).emit('end');
+		});
+		socket.on('intro end', (roomId) => {
+			socket.broadcast.to(`admin-${roomId}`).emit('start');
 		});
 	});
 });

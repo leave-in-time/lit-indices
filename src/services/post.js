@@ -12,7 +12,8 @@ const post = (data, cb) => {
 		res.json().then((json) => {
 			if (res.status === 200) {
 				store.dispatch(addClue(json));
-				cb('Indice ajouté!')
+				const message = data.atmosphere ? 'Ambiance ajoutée !' : 'Indice ajouté !';
+				cb(message);
 			}
 			else cb('Problème lors de l\'ajout, veuillez réessayer.');
 		});

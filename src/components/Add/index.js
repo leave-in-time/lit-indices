@@ -52,7 +52,8 @@ class Add extends Component {
 		const data = {
 			description: this.state.description,
 			type: this.props.accept || 'text',
-			roomId: this.props.roomId
+			roomId: this.props.roomId,
+			atmosphere: this.props.atmosphere || false
 		};
 		if (this.state.file) data.newFile = this.state.file;
 		// and post it to the server
@@ -94,14 +95,14 @@ class Add extends Component {
 			<div className="add">
 				<IconButton
 					iconStyle={{ width: 24, height: 24, color: 'rgb(164, 198, 57)' }}
-					tooltip="ajouter un indice"
+					tooltip={`Ajouter ${this.props.atmosphere ? 'une ambiance' : 'un indice'}`}
 					tooltipPosition="bottom-center"
 					onTouchTap={this.handleClick}
 				>
 					<ContentAddCircle />
 				</IconButton>
 				<Dialog
-					title="Ajouter un indice"
+					title={`Ajouter ${this.props.atmosphere ? 'une ambiance' : 'un indice'}`}
 					actions={actions}
 					modal={true}
 					open={this.state.dialog}
@@ -127,7 +128,7 @@ class Add extends Component {
 						</div>
 					}
 					<TextField
-						hintText="Veuillez saisir votre texte"
+						hintText="Veuillez saisir description"
 						value={this.state.description}
 						onChange={this.handleDescriptionChange}
 						ref={(c) => {if (c) c.focus()}}

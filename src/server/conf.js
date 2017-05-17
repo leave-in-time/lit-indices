@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const confSchema = mongoose.Schema({
 	roomId: String,
 	ip: String,
-	idleVideo: String
+	clueSound: String,
+	color: String
 });
 
 const Conf = mongoose.model('Conf', confSchema);

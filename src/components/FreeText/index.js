@@ -29,7 +29,7 @@ class FreeText extends Component {
 
 	render() {
 		return (
-			<div className="ft-container">
+			<div className="container ft-container">
 				<Title title="Texte libre" />
 				<TextField
 					hintText="Veuillez saisir votre texte"

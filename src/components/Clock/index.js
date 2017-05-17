@@ -12,17 +12,15 @@ class Clock extends Component {
 			clockFace: 'MinuteCounter',
 			autoStart: false
 		});
-	}
-
-	componentWillReceiveProps(nextProps) {
-		this.clock.setTime(nextProps.time);
+		this.clock.setTime(this.props.time || 3600);
 	}
 
 	shouldComponentUpdate(nextProps) {
 		return this.props.time !== nextProps.time;
 	}
 
-	componentWillUpdate() {
+	componentWillUpdate(nextProps) {
+		this.clock.setTime(nextProps.time + 1);
 		this.clock.flip();
 		this.tick.play();
 	}
@@ -34,7 +32,7 @@ class Clock extends Component {
 		return (
 			<div>
 				<div id="clock" className={className}></div>
-				<audio src="../fx/tick.mp3" ref={(c) => this.tick = c} />
+				<audio muted={this.props.muted} src="../fx/tick.mp3" ref={(c) => this.tick = c} />
 			</div>
 		);
 	}
