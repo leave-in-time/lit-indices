@@ -1,0 +1,18 @@
+.volume-holder {
+	width: 100px;
+	height: 18px;
+	background-color: white;
+	border-radius: 1px;
+}
+
+.volume-holder div[value] > div {
+	margin: 0!important;
+}
+
+.volume-holder div[tabindex] {
+	background-color: rgb(255, 64, 129)!important;
+}
+
+.volume-holder div[value="0"] div[tabindex] {
+	background-color: rgb(255, 255, 255)!important;
+}

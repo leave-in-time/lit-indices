@@ -18,7 +18,8 @@ class Display extends Component {
 			intro: false,
 			clue: null,
 			atmosphere: null,
-			muted: true
+			muted: true,
+			volume: 1.0
 		 };
 		this.socket = io('http://localhost:3030');
 		this.socket.on('intro', () => {
@@ -43,10 +44,14 @@ class Display extends Component {
 			this.clueSound.currentTime = 0;
 			this.clueSound.play();
 		});
+		this.socket.on('volume', (volume) => {
+			this.setState({ volume });
+		});
 	}
 
 	componentDidMount() {
 		getConf(this.props.match.params.roomId);
+		this.clueSound.volume = this.state.volume;
 		this.socket.emit('display', this.props.match.params.roomId);
 	}
 
@@ -56,6 +61,10 @@ class Display extends Component {
 
 	componentWillUnmount() {
 		this.socket.emit('leave', this.props.match.params.roomId);
+	}
+
+	componentDidUpdate() {
+		this.clueSound.volume = this.state.volume;
 	}
 
 	endCallback = () => {
@@ -73,9 +82,9 @@ class Display extends Component {
 					red={300}
 					muted={this.state.muted}
 				/>
-				<Clue clue={this.state.clue} />
-				{this.state.atmosphere && <Atmosphere atmosphere={this.state.atmosphere} />}
-				{this.state.intro && <Intro endCallback={this.endCallback} />}
+				<Clue clue={this.state.clue} volume={this.state.volume} />
+				{this.state.atmosphere && <Atmosphere atmosphere={this.state.atmosphere} volume={this.state.volume} />}
+				{this.state.intro && <Intro endCallback={this.endCallback} volume={this.state.volume} />}
 				<audio
 					src={`../uploads/${this.props.conf.clueSound}` || '../fx/bell.mp3'}
 					ref={(c) => this.clueSound = c}

@@ -3,6 +3,11 @@ import React, { Component } from 'react';
 import './style.css';
 
 class Clue extends Component {
+	componentDidUpdate() {
+		if (this.video) this.video.volume = this.props.volume;
+		if (this.audio) this.audio.volume = this.props.volume;
+	}
+
 	renderClue = () => {
 		if (!this.props.clue) return null;
 		switch (this.props.clue.type) {
@@ -20,6 +25,7 @@ class Clue extends Component {
 						src={`../uploads/${this.props.clue.fileName}`}
 						autoPlay
 						className="clue-video"
+						ref={(c) => this.video = c}
 					/>
 				);
 			case 'audio':
@@ -28,6 +34,7 @@ class Clue extends Component {
 						<audio
 							src={`../uploads/${this.props.clue.fileName}`}
 							autoPlay
+							ref={(c) => this.audio = c}
 						/>
 					</div>
 				);

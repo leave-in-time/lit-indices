@@ -147,6 +147,9 @@ db.once('open', () => {
 		socket.on('send end', (roomId) => {
 			socket.broadcast.to(roomId).emit('end');
 		});
+		socket.on('send volume', (data) => {
+			socket.broadcast.to(data.roomId).emit('volume', data.volume);
+		});
 		socket.on('intro end', (roomId) => {
 			socket.broadcast.to(`admin-${roomId}`).emit('start');
 		});

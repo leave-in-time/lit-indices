@@ -3,6 +3,11 @@ import React, { Component } from 'react';
 import './style.css';
 
 class Atmosphere extends Component {
+	componentDidUpdate() {
+		if (this.video) this.video.volume = this.props.volume;
+		if (this.audio) this.audio.volume = this.props.volume;
+	}
+
 	renderAtmosphere = () => {
 		if (!this.props.atmosphere) return null;
 		switch (this.props.atmosphere.type) {
@@ -12,6 +17,7 @@ class Atmosphere extends Component {
 						src={`../uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
 						className="atmosphere-video"
+						ref={(c) => this.video = c}
 					/>
 				);
 			case 'audio':
@@ -19,6 +25,7 @@ class Atmosphere extends Component {
 					<audio
 						src={`../uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
+						ref={(c) => this.audio = c}
 					/>
 				);
 			default:

@@ -10,6 +10,7 @@ import FreeText from '../FreeText';
 import Add from '../Add';
 import Timer from '../Timer';
 import Conf from '../Conf';
+import Volume from '../Volume';
 
 import get from '../../services/get';
 import getConf from '../../services/getConf';
@@ -56,6 +57,13 @@ class Room extends Component {
 		});
 	}
 
+	handleVolume = (volume) => {
+		this.socket.emit('send volume', {
+			roomId: this.props.match.params.roomId,
+			volume
+		});
+	}
+
 
 	render() {
 		return (
@@ -69,6 +77,9 @@ class Room extends Component {
 					style={{ backgroundColor: (this.props.conf && this.props.conf.color) || 'rgb(0, 188, 212)' }}
 					className="r-bar"
 				>
+					<div className="r-volume">
+						<Volume volumeCallback={this.handleVolume} />
+					</div>
 					<div className="r-clear">
 						<RaisedButton
 							label="Enelver l'indice/ambiance"

@@ -8,7 +8,12 @@ class Display extends Component {
 		this.video.addEventListener('ended', () => {
 			this.props.endCallback();
 		});
+		this.video.volume = this.props.volume;
 		this.video.play();
+	}
+
+	componentDidUpdate() {
+		if (this.video) this.video.volume = this.props.volume;
 	}
 
 	render() {

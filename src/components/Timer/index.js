@@ -169,14 +169,6 @@ class Timer extends Component {
 		);
 	}
 
-	// handleChangeVolume = (e, v) => {
-	// 	this.setState({ volume: v });
-	// }
-	//
-	// handleSendVolume = () => {
-	// 	console.log(this.state.volume);
-	// }
-
 	render() {
 		const timerActions = [
 			<FlatButton
@@ -242,6 +234,7 @@ class Timer extends Component {
 				<span>{this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}</span>
 				<IconButton
 					tooltip={this.state.muted ? 'Allumer le tick d\'horloge' : 'Éteindre le tick d\'horloge'}
+					tooltipPosition="bottom-left"
 					onTouchTap={this.handleMute}
 				>
 					{this.state.muted ?
@@ -249,16 +242,6 @@ class Timer extends Component {
 						<Mute />
 					}
 				</IconButton>
-				{/* <div className="slider-holder">
-					<Slider
-						min={0}
-						max={100}
-						step={1}
-						value={this.state.volume}
-						onChange={this.handleChangeVolume}
-						onDragStop={this.handleSendVolume}
-					/>
-				</div> */}
 				<Dialog
 					title="Editer le timer"
 					actions={timerActions}
