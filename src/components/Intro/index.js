@@ -20,7 +20,7 @@ class Display extends Component {
 		return (
 			<video
 				id="intro"
-				src="../fx/intro.mp4"
+				src="../fx/intro.webm"
 				ref={(c) => this.video = c}
 			/>
 		);

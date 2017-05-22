@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
-import Avatar from 'material-ui/Avatar';
-import {
-	List,
-	ListItem
-} from 'material-ui/List';
+import { connect } from 'react-redux';
+import AppBar from 'material-ui/AppBar';
+import { List, ListItem } from 'material-ui/List';
 import Snackbar from 'material-ui/Snackbar';
 import IconButton from 'material-ui/IconButton';
+import HomeIcon from 'material-ui/svg-icons/action/home';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
-import C from '../../constants';
 import Confirm from '../Confirm';
-import removeClue from '../../services/removeClue';
-import './style.css';
+import getRooms from '../../services/getRooms';
+import removeRoom from '../../services/removeRoom';
 
-class ClueList extends Component {
+class Home extends Component {
 	constructor(props) {
 		super(props);
 		// initial state
@@ -22,24 +20,28 @@ class ClueList extends Component {
 			snackbar: false,
 			snackbarMessage: ''
 		};
+		this.admin = this.props.match.url.startsWith('/admin');
+	}
+	componentDidMount() {
+		getRooms();
 	}
 
-	handleEmit = (clue) => {
-		const channel = this.props.atmosphere ? 'send atmosphere' : 'send clue';
-		this.props.socket.emit(channel, clue);
+	handleGo = (room) => {
+		let suffix = this.admin ? '/admin/' : '/user/';
+		this.props.history.push(suffix + room.roomId);
 	}
 
 	// press for starting supression
-	handleClear = (id) => {
+	handleClear = (room) => {
 		this.setState({
 			dialog: true,
-			clearId: id
+			clearId: room.roomId,
 		});
 	}
 
 	// confirm suppression
 	handleConfirm = () => {
-		removeClue(this.state.clearId, (message) => {
+		removeRoom(this.state.clearId, (message) => {
 			this.setState({
 				dialog: false,
 				snackbar: true,
@@ -54,34 +56,35 @@ class ClueList extends Component {
 		this.setState({ dialog: false });
 	}
 
-	// close the snackbar
 	handleSnackbarClose = () => {
 		this.setState({ snackbar: false, snackbarMessage: '' });
-	};
+	}
 
 	render() {
-		const items = this.props.clues.map((clue) => {
+		const items = this.props.rooms.map((room) => {
 			return (
 				<ListItem
-					key={clue._id}
-					primaryText={clue.description}
-					leftAvatar={clue.type === 'image' ? (
-						<Avatar src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${clue.fileName}`} />
-					) : (
-						null
-					)}
-					rightIconButton={this.props.admin ?
+					key={room._id}
+					primaryText={room.roomId}
+					secondaryText={room.ip}
+					onTouchTap={this.handleGo.bind(this, room)}
+					rightIconButton={this.admin ?
 						<IconButton>
-							<ContentClear onTouchTap={this.handleClear.bind(this, clue._id)} />
+							<ContentClear onTouchTap={this.handleClear.bind(this, room)} />
 						</IconButton> :
 						null
 					}
-					onTouchTap={this.handleEmit.bind(this, clue)}
+					style={{ color: (room.color) }}
 				/>
 			);
 		});
+
 		return (
-			<div className="cl-container">
+			<div>
+				<AppBar
+					title="Leave in time"
+					iconElementLeft={<IconButton><HomeIcon /></IconButton>}
+				/>
 				<List>
 					{items}
 				</List>
@@ -101,4 +104,4 @@ class ClueList extends Component {
 	}
 }
 
-export default ClueList;
+export default connect(state => state)(Home);

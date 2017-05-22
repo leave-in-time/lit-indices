@@ -12,7 +12,8 @@ import Timer from '../Timer';
 import Conf from '../Conf';
 import Volume from '../Volume';
 
-import get from '../../services/get';
+import C from '../../constants';
+import getClues from '../../services/getClues';
 import getConf from '../../services/getConf';
 
 import './style.css';
@@ -24,7 +25,7 @@ class Room extends Component {
 			timer: false
 		};
 		this.admin = this.props.match.url.startsWith('/admin/');
-		this.socket = io('http://localhost:3030');
+		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('start', () => {
 			this.setState({ timer: true });
 		});
@@ -32,7 +33,7 @@ class Room extends Component {
 	}
 
 	componentDidMount() {
-		get(this.props.match.params.roomId);
+		getClues(this.props.match.params.roomId);
 		getConf(this.props.match.params.roomId);
 	}
 

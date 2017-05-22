@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
 import FileFileUpload from 'material-ui/svg-icons/file/file-upload';
 
-import post from '../../services/post';
+import post from '../../services/postClue';
 import './style.css';
 
 class Add extends Component {

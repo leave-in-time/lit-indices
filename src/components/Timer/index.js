@@ -38,6 +38,7 @@ class Timer extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		// TODO: check this!!
 		if (nextProps.timer) this.handlePlayPause();
 	}
 

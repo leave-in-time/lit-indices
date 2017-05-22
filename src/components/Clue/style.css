@@ -16,12 +16,6 @@
 	min-height: 100%;
 }
 
-.clue-audio {
-	background: url('../../../public/images/note.png') no-repeat;
-	width: 512px;
-	height: 512px;
-}
-
 .clue-text {
 	color: white;
 	font-family: Roboto, sans-serif;

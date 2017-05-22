@@ -1,7 +1,8 @@
+import C from '../constants';
 import { store } from '../store';
 import { getClues } from '../actions/clues';
 
-const url = 'http://localhost:3030/api/room/';
+const url = `${C.SERVER_HOST}:${C.SERVER_PORT}/api/room/`;
 
 const get = (roomId) => {
 	fetch(url + roomId).then((res) => {

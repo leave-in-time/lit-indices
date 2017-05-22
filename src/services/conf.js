@@ -1,4 +1,5 @@
-const url = 'http://localhost:3030/api/conf/';
+import C from '../constants';
+const url = `${C.SERVER_HOST}:${C.SERVER_PORT}/api/conf/`;
 
 const conf = (cb) => {
 	fetch(url).then((res) => {

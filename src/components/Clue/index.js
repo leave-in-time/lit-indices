@@ -30,13 +30,11 @@ class Clue extends Component {
 				);
 			case 'audio':
 				return (
-					<div className="clue-audio">
-						<audio
-							src={`../uploads/${this.props.clue.fileName}`}
-							autoPlay
-							ref={(c) => this.audio = c}
-						/>
-					</div>
+					<audio
+						src={`../uploads/${this.props.clue.fileName}`}
+						autoPlay
+						ref={(c) => this.audio = c}
+					/>
 				);
 			case 'text':
 				return (

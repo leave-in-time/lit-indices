@@ -7,6 +7,7 @@ import Clue from '../Clue';
 import Atmosphere from '../Atmosphere';
 import Intro from '../Intro';
 
+import C from '../../constants';
 import getConf from '../../services/getConf';
 
 import './style.css';
@@ -21,15 +22,21 @@ class Display extends Component {
 			muted: true,
 			volume: 1.0
 		 };
-		this.socket = io('http://localhost:3030');
+		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('intro', () => {
 			this.setState({ intro: true });
 		});
 		this.socket.on('clue', (clue) => {
+			const cb = () => {
+				this.setState({ clue });
+			};
+			this.setState({ clue: null, atmosphere: null });
+			this.clueSound.removeEventListener('ended', cb);
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
 			clue.type && this.clueSound.play();
-			this.setState({ clue, atmosphere: null });
+			this.clueSound.addEventListener('ended', cb);
+			this.forceUpdate();
 		});
 		this.socket.on('atmosphere', (atmosphere) => {
 			this.clueSound.pause();
@@ -40,6 +47,8 @@ class Display extends Component {
 			this.setState({ time, muted });
 		});
 		this.socket.on('end', () => {
+			this.setState({ clue: { type: 'text', description: 'GAME OVER!' }, atmosphere: null });
+			this.clueSound.removeEventListener('ended');
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
 			this.clueSound.play();

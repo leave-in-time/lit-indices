@@ -1,7 +1,8 @@
+import C from '../constants';
 import { store } from '../store';
 import { addClue } from '../actions/clues';
 
-const url = 'http://localhost:3030/api/upload/clue';
+const url = `${C.SERVER_HOST}:${C.SERVER_PORT}/api/upload/clue`;
 
 const post = (data, cb) => {
 	const fd = new FormData();

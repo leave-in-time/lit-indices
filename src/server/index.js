@@ -5,11 +5,18 @@ const path = require('path');
 const socketIO = require('socket.io');
 const mongoose = require('mongoose');
 const fs = require('fs-extra');
+const async = require('async');
 
 const Clue = require('./clue');
 const Conf = require('./conf');
 
-const public = path.join(__dirname, '..', '..', 'public');
+let folder = 'public';
+let port = 3030;
+if (process.env.NODE_ENV === 'production') {
+	folder = 'build';
+	port = 3000;
+}
+const public = path.join(__dirname, '..', '..', folder);
 const uploads = path.join(public, 'uploads');
 
 // ---------------------
@@ -17,6 +24,10 @@ const uploads = path.join(public, 'uploads');
 // ---------------------
 const app = express();
 app.use(express.static(public));
+app.use('/start', express.static(public));
+app.use('/admin/*', express.static(public));
+app.use('/user/*', express.static(public));
+app.use('/display/*', express.static(public));
 app.use(cors());
 
 // upload a new clue
@@ -54,7 +65,7 @@ app.post('/api/upload/conf', (req, res) => {
 				fields
 			);
 			if (files.newFile) values.clueSound = path.basename(files.newFile.path);
-			Conf.remove({ ip: values.ip }, (err, result) => {
+			Conf.remove({ roomId: values.roomId }, (err, result) => {
 				// TODO: handle error 500
 				const conf = new Conf(values);
 				conf.save((err, saved) => {
@@ -69,6 +80,7 @@ app.post('/api/upload/conf', (req, res) => {
 // get room configuration for the given ip
 app.get('/api/conf', (req, res) => {
 	const ip = req.ip.startsWith('::ffff:') ? req.ip.split('::ffff:')[1] : req.ip;
+	console.log(ip);
 	Conf.findOne({ ip }, (err, conf) => {
 		res.status(200).send(conf);
 	});
@@ -78,6 +90,41 @@ app.get('/api/conf', (req, res) => {
 app.get('/api/conf/:roomId', (req, res) => {
 	Conf.findOne({ roomId: req.params.roomId }, (err, conf) => {
 		res.status(200).send(conf || {});
+	});
+});
+
+// get all the rooms
+app.get('/api/rooms', (req, res) => {
+	Conf.find({}, null, { sort: { roomId: 1 }}, (err, rooms) => {
+		// TODO: handle error 500
+		res.status(200).send(rooms);
+	});
+});
+
+// delete the room and its related clues
+app.delete('/api/room/:roomId', (req, res) => {
+	Clue.find({ roomId: req.params.roomId }, (err, clues) => {
+		async.each(
+			clues,
+			(clue, cb) => {
+				if (clue.type !== 'text') {
+					fs.remove(path.join(uploads, clue.fileName), (err) => {
+						// TODO: handle error
+						cb();
+					});
+				}
+				else cb();
+			},
+			(err) => {
+				Clue.remove({ roomId: req.params.roomId }, (err) => {
+					// TODO: handle error
+					Conf.remove({ roomId: req.params.roomId }, (err) => {
+						// TODO: handle error 500
+						res.status(200).send();
+					});
+				});
+			}
+		);
 	});
 });
 
@@ -112,7 +159,7 @@ mongoose.connect('mongodb://localhost/lit-indices');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-	const server = app.listen(3030, () => {
+	const server = app.listen(port, () => {
 		console.log('Listening on port %d', server.address().port);
 	});
 	// ---------------------

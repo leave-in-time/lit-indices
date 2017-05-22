@@ -33,7 +33,7 @@ class Confirm extends Component {
 				modal
 				open={this.state.open}
 			>
-				Supprimer ce fichier ?
+				Supprimer cet élément ?
 			</Dialog>
 		);
 	}

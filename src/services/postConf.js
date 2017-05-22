@@ -1,4 +1,5 @@
-const url = 'http://localhost:3030/api/upload/conf';
+import C from '../constants';
+const url = `${C.SERVER_HOST}:${C.SERVER_PORT}/api/upload/conf`;
 
 const postConf = (data, cb) => {
 	const fd = new FormData();
