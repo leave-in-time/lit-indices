@@ -17,7 +17,7 @@ class Atmosphere extends Component {
 						src={`../uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
 						className="atmosphere-video"
-						ref={(c) => this.video = c}
+						ref={c => (this.video = c)}
 					/>
 				);
 			case 'audio':
@@ -25,13 +25,13 @@ class Atmosphere extends Component {
 					<audio
 						src={`../uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
-						ref={(c) => this.audio = c}
+						ref={c => (this.audio = c)}
 					/>
 				);
 			default:
 				return null;
 		}
-	}
+	};
 
 	render() {
 		return (

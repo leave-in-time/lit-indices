@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './style.css';
 
 class Display extends Component {
-
 	componentDidMount() {
 		this.video.addEventListener('ended', () => {
 			this.props.endCallback();
@@ -17,13 +16,7 @@ class Display extends Component {
 	}
 
 	render() {
-		return (
-			<video
-				id="intro"
-				src="../fx/intro.webm"
-				ref={(c) => this.video = c}
-			/>
-		);
+		return <video id="intro" src="../fx/intro.webm" ref={c => (this.video = c)} />;
 	}
 }
 

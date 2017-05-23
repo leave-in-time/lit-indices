@@ -7,7 +7,7 @@ export default (state = initialState, action) => {
 		case C.GET_ROOMS:
 			return action.rooms;
 		case C.REMOVE_ROOM:
-			return state.filter((e) => e.roomId !== action.roomId);
+			return state.filter(e => e.roomId !== action.roomId);
 		default:
 			return state;
 	}

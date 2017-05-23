@@ -1,12 +1,9 @@
-import {
-	applyMiddleware,
-	createStore,
-} from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
 
 // hot module reloading for the store
-const hmr = (store) => {
+const hmr = store => {
 	if (module.hot) {
 		module.hot.accept(() => {
 			// eslint-disable-next-line global-require

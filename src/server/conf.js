@@ -4,7 +4,7 @@ const confSchema = mongoose.Schema({
 	roomId: String,
 	ip: String,
 	clueSound: String,
-	color: String
+	color: String,
 });
 
 const Conf = mongoose.model('Conf', confSchema);

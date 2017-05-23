@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import Avatar from 'material-ui/Avatar';
-import {
-	List,
-	ListItem
-} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import Snackbar from 'material-ui/Snackbar';
 import IconButton from 'material-ui/IconButton';
 import ContentClear from 'material-ui/svg-icons/content/clear';
@@ -20,39 +17,38 @@ class ClueList extends Component {
 		this.state = {
 			dialog: false,
 			snackbar: false,
-			snackbarMessage: ''
+			snackbarMessage: '',
 		};
 	}
 
-	handleEmit = (clue) => {
+	handleEmit = clue => {
 		const channel = this.props.atmosphere ? 'send atmosphere' : 'send clue';
 		this.props.socket.emit(channel, clue);
-	}
+	};
 
 	// press for starting supression
-	handleClear = (id) => {
+	handleClear = id => {
 		this.setState({
 			dialog: true,
-			clearId: id
+			clearId: id,
 		});
-	}
+	};
 
 	// confirm suppression
 	handleConfirm = () => {
-		removeClue(this.state.clearId, (message) => {
+		removeClue(this.state.clearId, message => {
 			this.setState({
 				dialog: false,
 				snackbar: true,
 				snackbarMessage: message,
 			});
 		});
-
-	}
+	};
 
 	// cancel suppression
 	handleCancel = () => {
 		this.setState({ dialog: false });
-	}
+	};
 
 	// close the snackbar
 	handleSnackbarClose = () => {
@@ -60,21 +56,26 @@ class ClueList extends Component {
 	};
 
 	render() {
-		const items = this.props.clues.map((clue) => {
+		const items = this.props.clues.map(clue => {
 			return (
 				<ListItem
 					key={clue._id}
 					primaryText={clue.description}
-					leftAvatar={clue.type === 'image' ? (
-						<Avatar src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${clue.fileName}`} />
-					) : (
-						null
-					)}
-					rightIconButton={this.props.admin ?
-						<IconButton>
-							<ContentClear onTouchTap={this.handleClear.bind(this, clue._id)} />
-						</IconButton> :
-						null
+					leftAvatar={
+						clue.type === 'image'
+							? <Avatar
+									src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${clue.fileName}`}
+								/>
+							: null
+					}
+					rightIconButton={
+						this.props.admin
+							? <IconButton>
+									<ContentClear
+										onTouchTap={this.handleClear.bind(this, clue._id)}
+									/>
+								</IconButton>
+							: null
 					}
 					onTouchTap={this.handleEmit.bind(this, clue)}
 				/>

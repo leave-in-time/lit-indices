@@ -20,13 +20,13 @@ class Display extends Component {
 			clue: null,
 			atmosphere: null,
 			muted: true,
-			volume: 1.0
-		 };
+			volume: 1.0,
+		};
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('intro', () => {
 			this.setState({ intro: true });
 		});
-		this.socket.on('clue', (clue) => {
+		this.socket.on('clue', clue => {
 			const cb = () => {
 				this.setState({ clue });
 			};
@@ -38,7 +38,7 @@ class Display extends Component {
 			this.clueSound.addEventListener('ended', cb);
 			this.forceUpdate();
 		});
-		this.socket.on('atmosphere', (atmosphere) => {
+		this.socket.on('atmosphere', atmosphere => {
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
 			this.setState({ atmosphere, clue: {} });
@@ -53,7 +53,7 @@ class Display extends Component {
 			this.clueSound.currentTime = 0;
 			this.clueSound.play();
 		});
-		this.socket.on('volume', (volume) => {
+		this.socket.on('volume', volume => {
 			this.setState({ volume });
 		});
 	}
@@ -80,23 +80,20 @@ class Display extends Component {
 		this.setState({ intro: false }, () => {
 			this.socket.emit('intro end', this.props.match.params.roomId);
 		});
-	}
+	};
 
 	render() {
 		return (
 			<div id="display">
-				<Clock
-					time={this.state.time}
-					orange={900}
-					red={300}
-					muted={this.state.muted}
-				/>
+				<Clock time={this.state.time} orange={900} red={300} muted={this.state.muted} />
 				<Clue clue={this.state.clue} volume={this.state.volume} />
-				{this.state.atmosphere && <Atmosphere atmosphere={this.state.atmosphere} volume={this.state.volume} />}
-				{this.state.intro && <Intro endCallback={this.endCallback} volume={this.state.volume} />}
+				{this.state.atmosphere &&
+					<Atmosphere atmosphere={this.state.atmosphere} volume={this.state.volume} />}
+				{this.state.intro &&
+					<Intro endCallback={this.endCallback} volume={this.state.volume} />}
 				<audio
 					src={`../uploads/${this.props.conf.clueSound}` || '../fx/bell.mp3'}
-					ref={(c) => this.clueSound = c}
+					ref={c => (this.clueSound = c)}
 				/>
 			</div>
 		);

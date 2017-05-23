@@ -1,6 +1,6 @@
 import C from '../constants';
 
-export const getRooms = (rooms) => {
+export const getRooms = rooms => {
 	return (dispatch, getState) => {
 		dispatch({
 			type: C.GET_ROOMS,
@@ -9,11 +9,11 @@ export const getRooms = (rooms) => {
 	};
 };
 
-export const removeRoom = (roomId) => {
+export const removeRoom = roomId => {
 	return (dispatch, getState) => {
 		dispatch({
 			type: C.REMOVE_ROOM,
-			roomId
+			roomId,
 		});
 	};
 };

@@ -22,30 +22,31 @@ class Conf extends Component {
 			snackbarMessage: '',
 			ip: '',
 			fileName: '',
-			file: null
+			file: null,
 		};
 	}
 
 	// handle file selection
-	handleFileChange = (event) => {
+	handleFileChange = event => {
 		const fileName = event.target.value.slice(event.target.value.lastIndexOf('\\') + 1);
 		this.setState({ fileName, file: event.target.files[0] });
 	};
 
 	// handle ip change
-	handleIpChange = (event) => this.setState({ ip: event.target.value });
+	handleIpChange = event => this.setState({ ip: event.target.value });
 
 	// handle opening of the upload dialog
 	handleClick = () => this.setState({ dialog: true });
 
 	// cancel upload
-	handleCancel = () => this.setState({
-		dialog: false,
-		snackbar: false,
-		ip: '',
-		fileName: '',
-		file: null
-	});
+	handleCancel = () =>
+		this.setState({
+			dialog: false,
+			snackbar: false,
+			ip: '',
+			fileName: '',
+			file: null,
+		});
 
 	// handle upload
 	handleConfirm = () => {
@@ -53,19 +54,19 @@ class Conf extends Component {
 		const data = {
 			ip: this.state.ip,
 			color: this.state.color,
-			roomId: this.props.roomId
+			roomId: this.props.roomId,
 		};
 		if (this.state.file) data.newFile = this.state.file;
 		console.log(data);
 		// and post it to the server
-		postConf(data, (message) => {
+		postConf(data, message => {
 			this.setState({
 				dialog: false,
 				snackbar: true,
 				snackbarMessage: message,
 				ip: '',
 				fileName: '',
-				file: null
+				file: null,
 			});
 		});
 	};
@@ -78,15 +79,11 @@ class Conf extends Component {
 	// choose the color
 	handleColor = (color, event) => {
 		this.setState({ color: color.hex });
-	}
+	};
 
 	render() {
 		const actions = [
-			<FlatButton
-				label="Annuler"
-				secondary
-				onTouchTap={this.handleCancel}
-			/>,
+			<FlatButton label="Annuler" secondary onTouchTap={this.handleCancel} />,
 			<FlatButton
 				label="Ok"
 				primary
@@ -98,7 +95,7 @@ class Conf extends Component {
 			<div className="conf">
 				<IconButton
 					iconStyle={{ width: 24, height: 24 }}
-					tooltip={this.props.admin && 'configurer l\'écran'}
+					tooltip={this.props.admin && "configurer l'écran"}
 					tooltipPosition="bottom-right"
 					onTouchTap={this.props.admin ? this.handleClick : () => null}
 				>
@@ -120,11 +117,7 @@ class Conf extends Component {
 						backgroundColor="#a4c639"
 						className="c-input-file"
 					>
-						<input
-							type="file"
-							accept="audio/*"
-							onChange={this.handleFileChange}
-						/>
+						<input type="file" accept="audio/*" onChange={this.handleFileChange} />
 					</RaisedButton>
 					<TextField
 						hintText="Veuillez saisir l'ip de l'écran"
@@ -132,10 +125,7 @@ class Conf extends Component {
 						onChange={this.handleIpChange}
 						className="c-input-desc"
 					/>
-					<SliderPicker
-						color={this.state.color}
-						onChangeComplete={this.handleColor}
-					/>
+					<SliderPicker color={this.state.color} onChangeComplete={this.handleColor} />
 				</Dialog>
 				<Snackbar
 					open={this.state.snackbar}

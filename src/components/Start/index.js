@@ -7,7 +7,7 @@ class Start extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { roomId: null };
-		conf((conf) => {
+		conf(conf => {
 			this.setState({ roomId: conf.roomId });
 		});
 	}
@@ -15,7 +15,7 @@ class Start extends Component {
 	render() {
 		return (
 			<div>
-				{ this.state.roomId && <Redirect to={`/display/${this.state.roomId}`} /> }
+				{this.state.roomId && <Redirect to={`/display/${this.state.roomId}`} />}
 			</div>
 		);
 	}

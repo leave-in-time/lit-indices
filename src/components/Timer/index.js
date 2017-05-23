@@ -28,12 +28,12 @@ class Timer extends Component {
 			toBeMin: '',
 			muted: true,
 			nameDialog: false,
-			name: ''
+			name: '',
 		};
 		// keep the display clock in sync
 		this.props.clockCallback({
 			time: this.state.minutes * 60 + this.state.seconds,
-			muted: this.state.muted
+			muted: this.state.muted,
 		});
 	}
 
@@ -49,23 +49,21 @@ class Timer extends Component {
 				started: false,
 				running: false,
 				muted: true,
-				nameDialog: false
+				nameDialog: false,
 			});
-		}
-		else {
+		} else {
 			this.setState({
 				name: '',
-				nameDialog: true
+				nameDialog: true,
 			});
 		}
-	}
+	};
 
 	handlePlayPause = () => {
 		if (this.state.running) {
 			clearInterval(this.interval);
 			this.setState({ running: false });
-		}
-		else {
+		} else {
 			this.interval = setInterval(() => {
 				const time = this.state.minutes * 60 + this.state.seconds - 1;
 				if (time < 0) {
@@ -73,46 +71,45 @@ class Timer extends Component {
 					clearInterval(this.interval);
 					this.setState({
 						started: false,
-						running: false
+						running: false,
 					});
-				}
-				else {
+				} else {
 					this.setState({
 						minutes: Math.floor(time / 60),
-						seconds: time % 60
+						seconds: time % 60,
 					});
 					this.props.clockCallback({
 						time,
-						muted: this.state.muted
+						muted: this.state.muted,
 					});
 				}
 			}, 1000);
 			this.setState({ running: true });
 		}
-	}
+	};
 
 	handleReset = () => {
 		this.setState(
 			{
 				minutes: 60,
-				seconds: 0
+				seconds: 0,
 			},
 			() => {
 				this.props.clockCallback({
 					time: this.state.minutes * 60 + this.state.seconds,
-					muted: this.state.muted
+					muted: this.state.muted,
 				});
 			}
 		);
-	}
+	};
 
 	handleEdit = () => {
 		this.setState({ dialog: true });
-	}
+	};
 
 	handleCloseTimerDialog = () => {
 		this.setState({ dialog: false });
-	}
+	};
 
 	handleConfirmTimerDialog = () => {
 		const { toBeMin, toBeSec } = this.state;
@@ -122,61 +119,57 @@ class Timer extends Component {
 				seconds: toBeSec,
 				dialog: false,
 				toBeMin: '',
-				toBeSec: ''
+				toBeSec: '',
 			},
 			() => {
 				this.props.clockCallback({
 					time: this.state.minutes * 60 + this.state.seconds,
-					muted: this.state.muted
+					muted: this.state.muted,
 				});
 			}
 		);
-	}
+	};
 
-	handleMinutesChange = (e) => {
+	handleMinutesChange = e => {
 		if (parseInt(e.target.value, 10) < 0) this.setState({ toBeMin: 0 });
-		else if (parseInt(e.target.value, 10)  > 98) this.setState({ toBeMin: 98 });
+		else if (parseInt(e.target.value, 10) > 98) this.setState({ toBeMin: 98 });
 		else this.setState({ toBeMin: parseInt(e.target.value, 10) });
-	}
+	};
 
-	handleSecondsChange = (e) => {
-		if (parseInt(e.target.value, 10)  < 0) this.setState({ toBeSec: 0 });
-		else if (parseInt(e.target.value, 10)  > 59) this.setState({ toBeSec: 59 });
+	handleSecondsChange = e => {
+		if (parseInt(e.target.value, 10) < 0) this.setState({ toBeSec: 0 });
+		else if (parseInt(e.target.value, 10) > 59) this.setState({ toBeSec: 59 });
 		else this.setState({ toBeSec: parseInt(e.target.value, 10) });
-	}
+	};
 
 	handleMute = () => {
 		this.setState({ muted: !this.state.muted });
-	}
+	};
 
-	handleName = (e) => {
-		this.setState({ name: e.target.value })
-	}
+	handleName = e => {
+		this.setState({ name: e.target.value });
+	};
 
 	handleCloseNameDialog = () => {
 		this.setState({ nameDialog: false });
-	}
+	};
 
 	handleConfirmNameDialog = () => {
 		// TODO: handle stats
 		this.setState(
 			{
 				started: true,
-				nameDialog: false
+				nameDialog: false,
 			},
 			() => {
 				this.props.introCallback();
 			}
 		);
-	}
+	};
 
 	render() {
 		const timerActions = [
-			<FlatButton
-				label="Annuler"
-				secondary
-				onTouchTap={this.handleCloseTimerDialog}
-			/>,
+			<FlatButton label="Annuler" secondary onTouchTap={this.handleCloseTimerDialog} />,
 			<FlatButton
 				label="Ok"
 				primary
@@ -185,11 +178,7 @@ class Timer extends Component {
 			/>,
 		];
 		const nameActions = [
-			<FlatButton
-				label="Annuler"
-				secondary
-				onTouchTap={this.handleCloseNameDialog}
-			/>,
+			<FlatButton label="Annuler" secondary onTouchTap={this.handleCloseNameDialog} />,
 			<FlatButton
 				label="Ok"
 				primary
@@ -203,45 +192,38 @@ class Timer extends Component {
 					tooltip={this.state.started ? 'Terminer la partie' : 'Démarrer la partie'}
 					onTouchTap={this.handleStartStop}
 				>
-					{this.state.started ?
-						<End /> :
-						<Start />
-					}
+					{this.state.started ? <End /> : <Start />}
 				</IconButton>
 				<IconButton
 					tooltip={this.state.running ? 'Pause' : 'Play'}
 					onTouchTap={this.handlePlayPause}
 					disabled={!this.state.started}
 				>
-					{this.state.running ?
-						<Pause /> :
-						<Play />
-					}
+					{this.state.running ? <Pause /> : <Play />}
 				</IconButton>
-				<IconButton
-					tooltip='Reset'
-					onTouchTap={this.handleReset}
-				>
+				<IconButton tooltip="Reset" onTouchTap={this.handleReset}>
 					<Reset />
 				</IconButton>
-				<IconButton
-					tooltip='Édition manuelle'
-					onTouchTap={this.handleEdit}
-				>
+				<IconButton tooltip="Édition manuelle" onTouchTap={this.handleEdit}>
 					<Edit />
 				</IconButton>
-				<span>{this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}</span>
+				<span>
+					{this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}
+				</span>
 				<span>:</span>
-				<span>{this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}</span>
+				<span>
+					{this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}
+				</span>
 				<IconButton
-					tooltip={this.state.muted ? 'Allumer le tick d\'horloge' : 'Éteindre le tick d\'horloge'}
+					tooltip={
+						this.state.muted
+							? "Allumer le tick d'horloge"
+							: "Éteindre le tick d'horloge"
+					}
 					tooltipPosition="bottom-left"
 					onTouchTap={this.handleMute}
 				>
-					{this.state.muted ?
-						<Unmute /> :
-						<Mute />
-					}
+					{this.state.muted ? <Unmute /> : <Mute />}
 				</IconButton>
 				<Dialog
 					title="Editer le timer"

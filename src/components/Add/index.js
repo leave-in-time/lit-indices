@@ -21,30 +21,31 @@ class Add extends Component {
 			snackbarMessage: '',
 			description: '',
 			fileName: '',
-			file: null
+			file: null,
 		};
 	}
 
 	// handle file selection
-	handleFileChange = (event) => {
+	handleFileChange = event => {
 		const fileName = event.target.value.slice(event.target.value.lastIndexOf('\\') + 1);
 		this.setState({ fileName, file: event.target.files[0] });
 	};
 
 	// handle clue description
-	handleDescriptionChange = (event) => this.setState({ description: event.target.value });
+	handleDescriptionChange = event => this.setState({ description: event.target.value });
 
 	// handle opening of the upload dialog
 	handleClick = () => this.setState({ dialog: true });
 
 	// cancel upload
-	handleCancel = () => this.setState({
-		dialog: false,
-		snackbar: false,
-		description: '',
-		fileName: '',
-		file: null
-	});
+	handleCancel = () =>
+		this.setState({
+			dialog: false,
+			snackbar: false,
+			description: '',
+			fileName: '',
+			file: null,
+		});
 
 	// handle upload
 	handleConfirm = () => {
@@ -53,18 +54,18 @@ class Add extends Component {
 			description: this.state.description,
 			type: this.props.accept || 'text',
 			roomId: this.props.roomId,
-			atmosphere: this.props.atmosphere || false
+			atmosphere: this.props.atmosphere || false,
 		};
 		if (this.state.file) data.newFile = this.state.file;
 		// and post it to the server
-		post(data, (message) => {
+		post(data, message => {
 			this.setState({
 				dialog: false,
 				snackbar: true,
 				snackbarMessage: message,
 				description: '',
 				fileName: '',
-				file: null
+				file: null,
 			});
 		});
 	};
@@ -76,17 +77,13 @@ class Add extends Component {
 
 	render() {
 		const actions = [
-			<FlatButton
-				label="Annuler"
-				secondary
-				onTouchTap={this.handleCancel}
-			/>,
+			<FlatButton label="Annuler" secondary onTouchTap={this.handleCancel} />,
 			<FlatButton
 				label="Ok"
 				primary
 				disabled={
 					this.state.description.length <= 0 ||
-					(this.state.fileName.length <= 0 && this.props.accept)
+						(this.state.fileName.length <= 0 && this.props.accept)
 				}
 				onTouchTap={this.handleConfirm}
 			/>,
@@ -125,13 +122,14 @@ class Add extends Component {
 									onChange={this.handleFileChange}
 								/>
 							</RaisedButton>
-						</div>
-					}
+						</div>}
 					<TextField
 						hintText="Veuillez saisir description"
 						value={this.state.description}
 						onChange={this.handleDescriptionChange}
-						ref={(c) => {if (c) c.focus()}}
+						ref={c => {
+							if (c) c.focus();
+						}}
 						className="a-input-desc"
 					/>
 				</Dialog>

@@ -1,6 +1,6 @@
 import C from '../constants';
 
-export const getClues = (clues) => {
+export const getClues = clues => {
 	return (dispatch, getState) => {
 		dispatch({
 			type: C.GET_CLUES,
@@ -9,7 +9,7 @@ export const getClues = (clues) => {
 	};
 };
 
-export const addClue = (clue) => {
+export const addClue = clue => {
 	return (dispatch, getState) => {
 		dispatch({
 			type: C.ADD_CLUE,
@@ -18,11 +18,11 @@ export const addClue = (clue) => {
 	};
 };
 
-export const removeClue = (clueId) => {
+export const removeClue = clueId => {
 	return (dispatch, getState) => {
 		dispatch({
 			type: C.REMOVE_CLUE,
-			clueId
+			clueId,
 		});
 	};
 };

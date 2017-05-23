@@ -1,6 +1,6 @@
 import C from '../constants';
 
-export const getConf = (conf) => {
+export const getConf = conf => {
 	return (dispatch, getState) => {
 		dispatch({
 			type: C.GET_CONF,

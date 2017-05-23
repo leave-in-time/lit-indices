@@ -18,7 +18,7 @@ class Home extends Component {
 		this.state = {
 			dialog: false,
 			snackbar: false,
-			snackbarMessage: ''
+			snackbarMessage: '',
 		};
 		this.admin = this.props.match.url.startsWith('/admin');
 	}
@@ -26,55 +26,55 @@ class Home extends Component {
 		getRooms();
 	}
 
-	handleGo = (room) => {
+	handleGo = room => {
 		let suffix = this.admin ? '/admin/' : '/user/';
 		this.props.history.push(suffix + room.roomId);
-	}
+	};
 
 	// press for starting supression
-	handleClear = (room) => {
+	handleClear = room => {
 		this.setState({
 			dialog: true,
 			clearId: room.roomId,
 		});
-	}
+	};
 
 	// confirm suppression
 	handleConfirm = () => {
-		removeRoom(this.state.clearId, (message) => {
+		removeRoom(this.state.clearId, message => {
 			this.setState({
 				dialog: false,
 				snackbar: true,
 				snackbarMessage: message,
 			});
 		});
-
-	}
+	};
 
 	// cancel suppression
 	handleCancel = () => {
 		this.setState({ dialog: false });
-	}
+	};
 
 	handleSnackbarClose = () => {
 		this.setState({ snackbar: false, snackbarMessage: '' });
-	}
+	};
 
 	render() {
-		const items = this.props.rooms.map((room) => {
+		const items = this.props.rooms.map(room => {
 			return (
 				<ListItem
 					key={room._id}
 					primaryText={room.roomId}
 					secondaryText={room.ip}
 					onTouchTap={this.handleGo.bind(this, room)}
-					rightIconButton={this.admin ?
-						<IconButton>
-							<ContentClear onTouchTap={this.handleClear.bind(this, room)} />
-						</IconButton> :
-						null
+					rightIconButton={
+						this.admin
+							? <IconButton>
+									<ContentClear onTouchTap={this.handleClear.bind(this, room)} />
+								</IconButton>
+							: null
 					}
-					style={{ color: (room.color) }}
+					style={{ color: room.color }}
 				/>
 			);
 		});

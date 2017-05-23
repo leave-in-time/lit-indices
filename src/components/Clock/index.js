@@ -10,7 +10,7 @@ class Clock extends Component {
 		this.clock = new FlipClock($('#clock'), {
 			countdown: true,
 			clockFace: 'MinuteCounter',
-			autoStart: false
+			autoStart: false,
 		});
 		this.clock.setTime(this.props.time || 3600);
 	}
@@ -31,8 +31,8 @@ class Clock extends Component {
 		if (this.props.time <= this.props.red) className += ' red';
 		return (
 			<div>
-				<div id="clock" className={className}></div>
-				<audio muted={this.props.muted} src="../fx/tick.mp3" ref={(c) => this.tick = c} />
+				<div id="clock" className={className} />
+				<audio muted={this.props.muted} src="../fx/tick.mp3" ref={c => (this.tick = c)} />
 			</div>
 		);
 	}

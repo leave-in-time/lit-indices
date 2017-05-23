@@ -14,25 +14,12 @@ class Confirm extends Component {
 
 	render() {
 		const actions = [
-			<FlatButton
-				label="Annuler"
-				secondary
-				onTouchTap={this.props.handleCancel}
-			/>,
-			<FlatButton
-				label="Ok"
-				primary
-				onTouchTap={this.props.handleConfirm}
-			/>,
+			<FlatButton label="Annuler" secondary onTouchTap={this.props.handleCancel} />,
+			<FlatButton label="Ok" primary onTouchTap={this.props.handleConfirm} />,
 		];
 
 		return (
-			<Dialog
-				title="Confirmez la suppression"
-				actions={actions}
-				modal
-				open={this.state.open}
-			>
+			<Dialog title="Confirmez la suppression" actions={actions} modal open={this.state.open}>
 				Supprimer cet élément ?
 			</Dialog>
 		);

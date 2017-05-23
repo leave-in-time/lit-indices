@@ -14,18 +14,18 @@ class FreeText extends Component {
 		this.state = { value: '' };
 	}
 
-	handleChange = (event) => this.setState({ value: event.target.value });
+	handleChange = event => this.setState({ value: event.target.value });
 	handleClear = () => this.setState({ value: '' });
 	handleSend = () => {
 		if (this.state.value.length) {
 			this.props.socket.emit('send clue', {
 				type: 'text',
 				description: this.state.value,
-				roomId: this.props.roomId
+				roomId: this.props.roomId,
 			});
 			this.setState({ value: '' });
 		}
-	}
+	};
 
 	render() {
 		return (

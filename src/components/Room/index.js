@@ -22,7 +22,7 @@ class Room extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			timer: false
+			timer: false,
 		};
 		this.admin = this.props.match.url.startsWith('/admin/');
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
@@ -39,43 +39,44 @@ class Room extends Component {
 
 	handleIntroStart = () => {
 		this.socket.emit('send intro', this.props.match.params.roomId);
-	}
+	};
 
-	handleTimerClock = (data) => {
+	handleTimerClock = data => {
 		this.socket.emit('send clock', {
 			roomId: this.props.match.params.roomId,
-			...data
+			...data,
 		});
-	}
+	};
 
 	handleTimerEnd = () => {
 		this.socket.emit('send end', this.props.match.params.roomId);
-	}
+	};
 
 	handleClearClue = () => {
 		this.socket.emit('send clue', {
-			roomId: this.props.match.params.roomId
+			roomId: this.props.match.params.roomId,
 		});
-	}
+	};
 
-	handleVolume = (volume) => {
+	handleVolume = volume => {
 		this.socket.emit('send volume', {
 			roomId: this.props.match.params.roomId,
-			volume
+			volume,
 		});
-	}
-
+	};
 
 	render() {
 		return (
 			<div>
 				<AppBar
 					title={this.props.match.params.roomId}
-					iconElementLeft={<Conf
-						admin={this.admin}
-						roomId={this.props.match.params.roomId}
-					/>}
-					style={{ backgroundColor: (this.props.conf && this.props.conf.color) || 'rgb(0, 188, 212)' }}
+					iconElementLeft={
+						<Conf admin={this.admin} roomId={this.props.match.params.roomId} />
+					}
+					style={{
+						backgroundColor: (this.props.conf && this.props.conf.color) ||
+							'rgb(0, 188, 212)',
+					}}
 					className="r-bar"
 				>
 					<div className="r-volume">
@@ -98,20 +99,38 @@ class Room extends Component {
 				<div className="container medias">
 					<div className="content">
 						<Title title="Ambiance sonore" />
-						{this.admin && <Add atmosphere accept="audio" roomId={this.props.match.params.roomId} />}
+						{this.admin &&
+							<Add
+								atmosphere
+								accept="audio"
+								roomId={this.props.match.params.roomId}
+							/>}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'audio' && e.atmosphere) || []}
+							clues={
+								this.props.clues.filter(
+									e => e.type === 'audio' && e.atmosphere
+								) || []
+							}
 							admin={this.admin}
 							atmosphere
 						/>
 					</div>
 					<div className="content">
 						<Title title="Ambiance video" />
-						{this.admin && <Add atmosphere accept="video" roomId={this.props.match.params.roomId} />}
+						{this.admin &&
+							<Add
+								atmosphere
+								accept="video"
+								roomId={this.props.match.params.roomId}
+							/>}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'video' && e.atmosphere) || []}
+							clues={
+								this.props.clues.filter(
+									e => e.type === 'video' && e.atmosphere
+								) || []
+							}
 							admin={this.admin}
 							atmosphere
 						/>
@@ -121,42 +140,50 @@ class Room extends Component {
 						{this.admin && <Add roomId={this.props.match.params.roomId} />}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'text') || []}
+							clues={this.props.clues.filter(e => e.type === 'text') || []}
 							admin={this.admin}
 						/>
 					</div>
 					<div className="content">
 						<Title title="Images" />
-						{this.admin && <Add accept="image" roomId={this.props.match.params.roomId} />}
+						{this.admin &&
+							<Add accept="image" roomId={this.props.match.params.roomId} />}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'image') || []}
+							clues={this.props.clues.filter(e => e.type === 'image') || []}
 							admin={this.admin}
 						/>
 					</div>
 					<div className="content">
 						<Title title="Sons" />
-						{this.admin && <Add accept="audio" roomId={this.props.match.params.roomId} />}
+						{this.admin &&
+							<Add accept="audio" roomId={this.props.match.params.roomId} />}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'audio'  && !e.atmosphere) || []}
+							clues={
+								this.props.clues.filter(
+									e => e.type === 'audio' && !e.atmosphere
+								) || []
+							}
 							admin={this.admin}
 						/>
 					</div>
 					<div className="content">
 						<Title title="Vidéos" />
-						{this.admin && <Add accept="video" roomId={this.props.match.params.roomId} />}
+						{this.admin &&
+							<Add accept="video" roomId={this.props.match.params.roomId} />}
 						<ClueList
 							socket={this.socket}
-							clues={this.props.clues.filter((e) => e.type === 'video'  && !e.atmosphere) || []}
+							clues={
+								this.props.clues.filter(
+									e => e.type === 'video' && !e.atmosphere
+								) || []
+							}
 							admin={this.admin}
 						/>
 					</div>
 				</div>
-				<FreeText
-					roomId={this.props.match.params.roomId}
-					socket={this.socket}
-				/>
+				<FreeText roomId={this.props.match.params.roomId} socket={this.socket} />
 			</div>
 		);
 	}

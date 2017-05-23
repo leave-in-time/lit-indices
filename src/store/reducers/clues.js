@@ -9,7 +9,7 @@ export default (state = initialState, action) => {
 		case C.ADD_CLUE:
 			return state.concat([action.clue]);
 		case C.REMOVE_CLUE:
-			return state.filter((e) => e._id !== action.clueId);
+			return state.filter(e => e._id !== action.clueId);
 		default:
 			return state;
 	}

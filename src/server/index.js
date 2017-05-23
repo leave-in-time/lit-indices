@@ -16,18 +16,18 @@ if (process.env.NODE_ENV === 'production') {
 	folder = 'build';
 	port = 3000;
 }
-const public = path.join(__dirname, '..', '..', folder);
-const uploads = path.join(public, 'uploads');
+const publicFolder = path.join(__dirname, '..', '..', folder);
+const uploads = path.join(publicFolder, 'uploads');
 
 // ---------------------
 // express configuration
 // ---------------------
 const app = express();
-app.use(express.static(public));
-app.use('/start', express.static(public));
-app.use('/admin/*', express.static(public));
-app.use('/user/*', express.static(public));
-app.use('/display/*', express.static(public));
+app.use(express.static(publicFolder));
+app.use('/start', express.static(publicFolder));
+app.use('/admin/*', express.static(publicFolder));
+app.use('/user/*', express.static(publicFolder));
+app.use('/display/*', express.static(publicFolder));
 app.use(cors());
 
 // upload a new clue
@@ -38,11 +38,9 @@ app.post('/api/upload/clue', (req, res) => {
 	form.parse(req, (err, fields, files) => {
 		if (err) res.status(500).send(err);
 		else {
-			const values = Object.assign(
-				{},
-				fields
-			);
-			if (fields.type !== 'text' && files.newFile) values.fileName = path.basename(files.newFile.path);
+			const values = Object.assign({}, fields);
+			if (fields.type !== 'text' && files.newFile)
+				values.fileName = path.basename(files.newFile.path);
 			const clue = new Clue(values);
 			clue.save((err, saved) => {
 				if (err) res.status(500).send(err);
@@ -60,10 +58,7 @@ app.post('/api/upload/conf', (req, res) => {
 	form.parse(req, (err, fields, files) => {
 		if (err) res.status(500).send(err);
 		else {
-			const values = Object.assign(
-				{},
-				fields
-			);
+			const values = Object.assign({}, fields);
 			if (files.newFile) values.clueSound = path.basename(files.newFile.path);
 			Conf.remove({ roomId: values.roomId }, (err, result) => {
 				// TODO: handle error 500
@@ -72,7 +67,7 @@ app.post('/api/upload/conf', (req, res) => {
 					if (err) res.status(500).send(err);
 					else res.status(200).json(saved);
 				});
-			})
+			});
 		}
 	});
 });
@@ -95,7 +90,7 @@ app.get('/api/conf/:roomId', (req, res) => {
 
 // get all the rooms
 app.get('/api/rooms', (req, res) => {
-	Conf.find({}, null, { sort: { roomId: 1 }}, (err, rooms) => {
+	Conf.find({}, null, { sort: { roomId: 1 } }, (err, rooms) => {
 		// TODO: handle error 500
 		res.status(200).send(rooms);
 	});
@@ -108,17 +103,16 @@ app.delete('/api/room/:roomId', (req, res) => {
 			clues,
 			(clue, cb) => {
 				if (clue.type !== 'text') {
-					fs.remove(path.join(uploads, clue.fileName), (err) => {
+					fs.remove(path.join(uploads, clue.fileName), err => {
 						// TODO: handle error
 						cb();
 					});
-				}
-				else cb();
+				} else cb();
 			},
-			(err) => {
-				Clue.remove({ roomId: req.params.roomId }, (err) => {
+			err => {
+				Clue.remove({ roomId: req.params.roomId }, err => {
 					// TODO: handle error
-					Conf.remove({ roomId: req.params.roomId }, (err) => {
+					Conf.remove({ roomId: req.params.roomId }, err => {
 						// TODO: handle error 500
 						res.status(200).send();
 					});
@@ -141,12 +135,11 @@ app.delete('/api/clue/:clueId', (req, res) => {
 	Clue.findOne({ _id: req.params.clueId }, (err, clue) => {
 		Clue.remove({ _id: req.params.clueId }, (err, result) => {
 			if (clue.fileName) {
-				fs.remove(path.join(uploads, clue.fileName), (err) => {
+				fs.remove(path.join(uploads, clue.fileName), err => {
 					// TODO: handle error 500
 					res.status(200).send();
 				});
-			}
-			else res.status(200).send();
+			} else res.status(200).send();
 		});
 	});
 });
@@ -166,38 +159,38 @@ db.once('open', () => {
 	// socket.io configuration
 	// ---------------------
 	const io = socketIO(server);
-	io.on('connection', (socket) => {
-		socket.on('admin', (roomId) => {
+	io.on('connection', socket => {
+		socket.on('admin', roomId => {
 			console.log(`An admin is joining admin-${roomId}`);
 			socket.join(`admin-${roomId}`);
 		});
-		socket.on('display', (roomId) => {
+		socket.on('display', roomId => {
 			console.log(`A display is joining ${roomId}`);
 			socket.join(roomId);
 		});
-		socket.on('leave', (roomId) => {
+		socket.on('leave', roomId => {
 			console.log(`A display is leaving ${roomId}`);
 			socket.leave(roomId);
 		});
-		socket.on('send intro', (roomId) => {
+		socket.on('send intro', roomId => {
 			socket.broadcast.to(roomId).emit('intro');
 		});
-		socket.on('send clue', (clue) => {
+		socket.on('send clue', clue => {
 			socket.broadcast.to(clue.roomId).emit('clue', clue);
 		});
-		socket.on('send atmosphere', (atmosphere) => {
+		socket.on('send atmosphere', atmosphere => {
 			socket.broadcast.to(atmosphere.roomId).emit('atmosphere', atmosphere);
 		});
-		socket.on('send clock', (data) => {
+		socket.on('send clock', data => {
 			socket.broadcast.to(data.roomId).emit('clock', data);
 		});
-		socket.on('send end', (roomId) => {
+		socket.on('send end', roomId => {
 			socket.broadcast.to(roomId).emit('end');
 		});
-		socket.on('send volume', (data) => {
+		socket.on('send volume', data => {
 			socket.broadcast.to(data.roomId).emit('volume', data.volume);
 		});
-		socket.on('intro end', (roomId) => {
+		socket.on('intro end', roomId => {
 			socket.broadcast.to(`admin-${roomId}`).emit('start');
 		});
 	});

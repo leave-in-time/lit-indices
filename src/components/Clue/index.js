@@ -25,7 +25,7 @@ class Clue extends Component {
 						src={`../uploads/${this.props.clue.fileName}`}
 						autoPlay
 						className="clue-video"
-						ref={(c) => this.video = c}
+						ref={c => (this.video = c)}
 					/>
 				);
 			case 'audio':
@@ -33,17 +33,15 @@ class Clue extends Component {
 					<audio
 						src={`../uploads/${this.props.clue.fileName}`}
 						autoPlay
-						ref={(c) => this.audio = c}
+						ref={c => (this.audio = c)}
 					/>
 				);
 			case 'text':
-				return (
-					<p className="clue-text">{this.props.clue.description}</p>
-				);
+				return <p className="clue-text">{this.props.clue.description}</p>;
 			default:
 				return null;
 		}
-	}
+	};
 
 	render() {
 		return (

@@ -8,17 +8,17 @@ class Volume extends Component {
 		super(props);
 		// initial state
 		this.state = {
-			volume: 100
+			volume: 100,
 		};
 	}
 
 	handleChangeVolume = (e, v) => {
 		this.setState({ volume: v });
-	}
+	};
 
 	handleSendVolume = () => {
 		this.props.volumeCallback(this.state.volume / 100);
-	}
+	};
 
 	render() {
 		return (

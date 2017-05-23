@@ -5,9 +5,9 @@ import { getRooms } from '../actions/rooms';
 const url = `${C.SERVER_HOST}:${C.SERVER_PORT}/api/rooms/`;
 
 const get = () => {
-	fetch(url).then((res) => {
+	fetch(url).then(res => {
 		// TODO: handle error 500
-		res.json().then((json) => {
+		res.json().then(json => {
 			store.dispatch(getRooms(json));
 		});
 	});
