@@ -28,6 +28,7 @@ const uploads = path.join(publicFolder, 'uploads');
 const app = express();
 app.use(express.static(publicFolder));
 app.use('/start', express.static(publicFolder));
+app.use('/stats', express.static(publicFolder));
 app.use('/admin/*', express.static(publicFolder));
 app.use('/user/*', express.static(publicFolder));
 app.use('/display/*', express.static(publicFolder));
