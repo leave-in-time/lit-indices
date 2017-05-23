@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Room from './components/Room';
 import Display from './components/Display';
 import Start from './components/Start';
+import Stats from './components/Stats';
 
 const browserHistory = createBrowserHistory();
 
@@ -16,6 +17,7 @@ const Routes = props => (
 			<div>
 				<Route exact path="/" component={Home} />
 				<Route exact path="/admin" component={Home} />
+				<Route exact path="/stats" component={Stats} />
 				<Route path="/admin/:roomId" component={Room} />
 				<Route path="/user/:roomId" component={Room} />
 				<Route path="/display/:roomId" component={Display} />

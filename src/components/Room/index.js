@@ -37,8 +37,11 @@ class Room extends Component {
 		getConf(this.props.match.params.roomId);
 	}
 
-	handleIntroStart = () => {
-		this.socket.emit('send intro', this.props.match.params.roomId);
+	handleIntroStart = name => {
+		this.socket.emit('send intro', {
+			roomId: this.props.match.params.roomId,
+			name,
+		});
 	};
 
 	handleTimerClock = data => {
@@ -48,8 +51,11 @@ class Room extends Component {
 		});
 	};
 
-	handleTimerEnd = () => {
-		this.socket.emit('send end', this.props.match.params.roomId);
+	handleTimerEnd = gameover => {
+		this.socket.emit('send end', {
+			roomId: this.props.match.params.roomId,
+			gameover,
+		});
 	};
 
 	handleClearClue = () => {

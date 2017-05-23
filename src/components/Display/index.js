@@ -27,15 +27,11 @@ class Display extends Component {
 			this.setState({ intro: true });
 		});
 		this.socket.on('clue', clue => {
-			const cb = () => {
-				this.setState({ clue });
-			};
 			this.setState({ clue: null, atmosphere: null });
-			this.clueSound.removeEventListener('ended', cb);
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
 			clue.type && this.clueSound.play();
-			this.clueSound.addEventListener('ended', cb);
+			this.clueSound.addEventListener('ended', () => this.setState({ clue }), { once: true });
 			this.forceUpdate();
 		});
 		this.socket.on('atmosphere', atmosphere => {
@@ -46,9 +42,14 @@ class Display extends Component {
 		this.socket.on('clock', ({ time, muted }) => {
 			this.setState({ time, muted });
 		});
-		this.socket.on('end', () => {
-			this.setState({ clue: { type: 'text', description: 'GAME OVER!' }, atmosphere: null });
-			this.clueSound.removeEventListener('ended');
+		this.socket.on('end', gameover => {
+			this.setState({
+				clue: {
+					type: 'text',
+					description: gameover ? 'GAME OVER !' : 'BRAVO !',
+				},
+				atmosphere: null,
+			});
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
 			this.clueSound.play();
@@ -92,6 +93,7 @@ class Display extends Component {
 				{this.state.intro &&
 					<Intro endCallback={this.endCallback} volume={this.state.volume} />}
 				<audio
+					id="sound"
 					src={`../uploads/${this.props.conf.clueSound}` || '../fx/bell.mp3'}
 					ref={c => (this.clueSound = c)}
 				/>

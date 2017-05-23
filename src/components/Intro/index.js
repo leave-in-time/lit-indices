@@ -4,9 +4,7 @@ import './style.css';
 
 class Display extends Component {
 	componentDidMount() {
-		this.video.addEventListener('ended', () => {
-			this.props.endCallback();
-		});
+		this.video.addEventListener('ended', () => this.props.endCallback(), { once: true });
 		this.video.volume = this.props.volume;
 		this.video.play();
 	}

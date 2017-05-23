@@ -23,6 +23,7 @@ class Conf extends Component {
 			ip: '',
 			fileName: '',
 			file: null,
+			color: 'rgb(0, 188, 212)',
 		};
 	}
 
@@ -57,7 +58,6 @@ class Conf extends Component {
 			roomId: this.props.roomId,
 		};
 		if (this.state.file) data.newFile = this.state.file;
-		console.log(data);
 		// and post it to the server
 		postConf(data, message => {
 			this.setState({

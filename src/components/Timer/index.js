@@ -51,6 +51,7 @@ class Timer extends Component {
 				muted: true,
 				nameDialog: false,
 			});
+			this.props.endCallback(false);
 		} else {
 			this.setState({
 				name: '',
@@ -67,7 +68,7 @@ class Timer extends Component {
 			this.interval = setInterval(() => {
 				const time = this.state.minutes * 60 + this.state.seconds - 1;
 				if (time < 0) {
-					this.props.endCallback();
+					this.props.endCallback(true);
 					clearInterval(this.interval);
 					this.setState({
 						started: false,
@@ -162,7 +163,7 @@ class Timer extends Component {
 				nameDialog: false,
 			},
 			() => {
-				this.props.introCallback();
+				this.props.introCallback(this.state.name);
 			}
 		);
 	};
