@@ -29,6 +29,7 @@ const app = express();
 app.use(express.static(publicFolder));
 app.use('/start', express.static(publicFolder));
 app.use('/stats', express.static(publicFolder));
+app.use('/admin', express.static(publicFolder));
 app.use('/admin/*', express.static(publicFolder));
 app.use('/user/*', express.static(publicFolder));
 app.use('/display/*', express.static(publicFolder));
@@ -185,7 +186,7 @@ db.once('open', () => {
 	// ---------------------
 	const io = socketIO(server);
 	io.on('connection', socket => {
-		const currentStat = {
+		let currentStat = {
 			events: [],
 		};
 		let currentTime;
@@ -240,7 +241,10 @@ db.once('open', () => {
 			currentStat.endTime = currentTime;
 			currentStat.gameover = data.gameover;
 			const stat = new Stat(currentStat);
-			stat.save();
+			stat.save((err, saved) => {
+				currentStat = {};
+				currentStat.events = [];
+			});
 		});
 		socket.on('send volume', data => {
 			socket.broadcast.to(data.roomId).emit('volume', data.volume);
