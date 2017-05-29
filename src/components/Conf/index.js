@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -9,6 +10,7 @@ import ActionSettings from 'material-ui/svg-icons/action/settings';
 import FileFileUpload from 'material-ui/svg-icons/file/file-upload';
 import { SliderPicker } from 'react-color';
 
+import { loading, loaded } from '../../actions/loading';
 import postConf from '../../services/postConf';
 import './style.css';
 
@@ -59,15 +61,19 @@ class Conf extends Component {
 		};
 		if (this.state.file) data.newFile = this.state.file;
 		// and post it to the server
+		this.props.loading();
 		postConf(data, message => {
-			this.setState({
-				dialog: false,
-				snackbar: true,
-				snackbarMessage: message,
-				ip: '',
-				fileName: '',
-				file: null,
-			});
+			setTimeout(() => {
+				this.props.loaded();
+				this.setState({
+					dialog: false,
+					snackbar: true,
+					snackbarMessage: message,
+					ip: '',
+					fileName: '',
+					file: null,
+				});
+			}, 1000);
 		});
 	};
 
@@ -138,4 +144,6 @@ class Conf extends Component {
 	}
 }
 
-export default Conf;
+const mapDispatchToProps = Object.assign({ loading, loaded });
+
+export default connect(state => state, mapDispatchToProps)(Conf);

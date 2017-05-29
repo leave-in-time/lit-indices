@@ -11,6 +11,7 @@ import Add from '../Add';
 import Timer from '../Timer';
 import Conf from '../Conf';
 import Volume from '../Volume';
+import Loader from '../Loader';
 
 import C from '../../constants';
 import getClues from '../../services/getClues';
@@ -102,6 +103,7 @@ class Room extends Component {
 						timer={this.state.timer}
 					/>
 				</AppBar>
+				<Loader open={this.props.open} />
 				<div className="container medias">
 					<div className="content">
 						<Title title="Ambiance sonore" />
