@@ -12,20 +12,32 @@ const processStat = stat => {
 	const count = stat.events.filter(e => e.type === 'indice').length;
 	const start = moment(stat.startTime).tz('Europe/Paris').format('DD/MM/YYYY HH:mm:ss');
 	let lines = '';
-	stat.events.forEach(event => {
+	if (stat.events.length === 0) {
 		const currentLine = [];
 		currentLine.push(stat.gameMaster);
 		currentLine.push(stat.roomId);
 		currentLine.push(start);
 		currentLine.push(toMS(stat.endTime));
 		currentLine.push(stat.gameover);
-		currentLine.push(count);
-		currentLine.push(event.type);
-		currentLine.push(toMS(event.time));
-		currentLine.push(event.media);
-		currentLine.push(`${event.description}\n`);
+		currentLine.push(`${count}\n`);
 		lines += currentLine.join(',');
-	});
+	} else {
+		stat.events.forEach(event => {
+			const currentLine = [];
+			currentLine.push(stat.gameMaster);
+			currentLine.push(stat.roomId);
+			currentLine.push(start);
+			currentLine.push(toMS(stat.endTime));
+			currentLine.push(stat.gameover);
+			currentLine.push(count);
+			currentLine.push(event.type);
+			currentLine.push(toMS(event.time));
+			currentLine.push(event.media);
+			currentLine.push(`${event.description}\n`);
+			lines += currentLine.join(',');
+		});
+	}
+	lines += '\n';
 	return lines;
 };
 
