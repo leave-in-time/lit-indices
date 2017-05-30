@@ -21,10 +21,14 @@ class Display extends Component {
 			atmosphere: null,
 			muted: true,
 			volume: 1.0,
+			black: false,
 		};
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
+		this.socket.on('black', () => {
+			this.setState({ black: true });
+		});
 		this.socket.on('intro', () => {
-			this.setState({ intro: true });
+			this.setState({ intro: true, black: false });
 		});
 		this.socket.on('clue', clue => {
 			this.setState({ clue: null, atmosphere: null });
@@ -92,6 +96,7 @@ class Display extends Component {
 					<Atmosphere atmosphere={this.state.atmosphere} volume={this.state.volume} />}
 				{this.state.intro &&
 					<Intro endCallback={this.endCallback} volume={this.state.volume} />}
+				{this.state.black && <div className="black" />}
 				<audio
 					id="sound"
 					src={`../uploads/${this.props.conf.clueSound}` || '../fx/bell.mp3'}

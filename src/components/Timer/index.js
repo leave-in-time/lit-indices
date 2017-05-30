@@ -57,6 +57,7 @@ class Timer extends Component {
 				name: '',
 				nameDialog: true,
 			});
+			this.props.blackCallback();
 		}
 	};
 

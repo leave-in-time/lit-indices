@@ -202,6 +202,11 @@ db.once('open', () => {
 			console.log(`A display is leaving ${roomId}`);
 			socket.leave(roomId);
 		});
+
+		socket.on('send black', roomId => {
+			socket.broadcast.to(data.roomId).emit('black');
+		});
+
 		socket.on('send intro', data => {
 			console.log(`Game started: ${data.roomId} by ${data.name}`);
 			currentStat.startTime = new Date();

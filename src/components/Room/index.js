@@ -38,6 +38,10 @@ class Room extends Component {
 		getConf(this.props.match.params.roomId);
 	}
 
+	handleBlack = () => {
+		this.socket.emit('send black', this.props.match.params.roomId);
+	};
+
 	handleIntroStart = name => {
 		this.socket.emit('send intro', {
 			roomId: this.props.match.params.roomId,
@@ -97,6 +101,7 @@ class Room extends Component {
 						/>
 					</div>
 					<Timer
+						blackCallback={this.handleBlack}
 						introCallback={this.handleIntroStart}
 						clockCallback={this.handleTimerClock}
 						endCallback={this.handleTimerEnd}
