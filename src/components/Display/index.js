@@ -25,7 +25,7 @@ class Display extends Component {
 		};
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('black', () => {
-			this.setState({ black: true });
+			this.setState({ black: true, clue: {} });
 		});
 		this.socket.on('intro', () => {
 			this.setState({ intro: true, black: false });
@@ -34,7 +34,14 @@ class Display extends Component {
 			this.setState({ clue: null, atmosphere: null });
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
-			this.clueSound.addEventListener('ended', () => this.setState({ clue }), { once: true });
+			this.clueSound.addEventListener(
+				'ended',
+				() => {
+					console.log('test');
+					this.setState({ clue });
+				},
+				{ once: true }
+			);
 			clue.type && this.clueSound.play();
 			this.forceUpdate();
 		});

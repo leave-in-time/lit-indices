@@ -204,7 +204,7 @@ db.once('open', () => {
 		});
 
 		socket.on('send black', roomId => {
-			socket.broadcast.to(data.roomId).emit('black');
+			socket.broadcast.to(roomId).emit('black');
 		});
 
 		socket.on('send intro', data => {

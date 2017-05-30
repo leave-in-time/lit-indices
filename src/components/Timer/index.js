@@ -53,11 +53,22 @@ class Timer extends Component {
 			});
 			this.props.endCallback(false);
 		} else {
-			this.setState({
-				name: '',
-				nameDialog: true,
-			});
-			this.props.blackCallback();
+			this.setState(
+				{
+					name: '',
+					nameDialog: true,
+					minutes: 60,
+					seconds: 0,
+					muted: true,
+				},
+				() => {
+					this.props.clockCallback({
+						time: this.state.minutes * 60 + this.state.seconds,
+						muted: this.state.muted,
+					});
+					this.props.blackCallback();
+				}
+			);
 		}
 	};
 
