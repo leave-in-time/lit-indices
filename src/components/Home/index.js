@@ -20,14 +20,14 @@ class Home extends Component {
 			snackbar: false,
 			snackbarMessage: '',
 		};
-		this.admin = this.props.match.url.startsWith('/admin');
+		this.admin = this.props.match.url.startsWith('/JBJU2A');
 	}
 	componentDidMount() {
 		getRooms();
 	}
 
 	handleGo = room => {
-		let suffix = this.admin ? '/admin/' : '/user/';
+		let suffix = this.admin ? '/JBJU2A/' : '/user/';
 		this.props.history.push(suffix + room.roomId);
 	};
 

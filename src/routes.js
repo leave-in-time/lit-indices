@@ -16,9 +16,9 @@ const Routes = props => (
 		<MuiThemeProvider>
 			<div>
 				<Route exact path="/" component={Home} />
-				<Route exact path="/admin" component={Home} />
+				<Route exact path="/JBJU2A" component={Home} />
 				<Route exact path="/stats" component={Stats} />
-				<Route path="/admin/:roomId" component={Room} />
+				<Route path="/JBJU2A/:roomId" component={Room} />
 				<Route path="/user/:roomId" component={Room} />
 				<Route path="/display/:roomId" component={Display} />
 				<Route path="/start" component={Start} />

@@ -25,7 +25,7 @@ class Room extends Component {
 		this.state = {
 			timer: false,
 		};
-		this.admin = this.props.match.url.startsWith('/admin/');
+		this.admin = this.props.match.url.startsWith('/JBJU2A/');
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('start', () => {
 			this.setState({ timer: true });

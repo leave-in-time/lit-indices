@@ -46,7 +46,7 @@ class Display extends Component {
 			this.setState({
 				clue: {
 					type: 'text',
-					description: gameover ? 'GAME OVER !' : 'BRAVO !',
+					description: gameover ? 'GAME OVER !' : 'FÉLICITATIONS !!!',
 				},
 				atmosphere: null,
 			});
