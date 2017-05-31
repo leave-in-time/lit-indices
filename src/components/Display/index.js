@@ -37,7 +37,6 @@ class Display extends Component {
 			this.clueSound.addEventListener(
 				'ended',
 				() => {
-					console.log('test');
 					this.setState({ clue });
 				},
 				{ once: true }
@@ -97,12 +96,18 @@ class Display extends Component {
 	render() {
 		return (
 			<div id="display">
-				<Clock time={this.state.time} orange={900} red={300} muted={this.state.muted} />
+				{this.state.intro &&
+					<Intro endCallback={this.endCallback} volume={this.state.volume} />}
+				{!this.state.intro &&
+					<Clock
+						time={this.state.time}
+						orange={900}
+						red={300}
+						muted={this.state.muted}
+					/>}
 				<Clue clue={this.state.clue} volume={this.state.volume} />
 				{this.state.atmosphere &&
 					<Atmosphere atmosphere={this.state.atmosphere} volume={this.state.volume} />}
-				{this.state.intro &&
-					<Intro endCallback={this.endCallback} volume={this.state.volume} />}
 				{this.state.black && <div className="black" />}
 				<audio
 					id="sound"

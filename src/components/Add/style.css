@@ -20,3 +20,8 @@
 .a-input-desc {
 	display: block!important;
 }
+
+.a-toggle {
+	width: 350px!important;
+	margin-top: 12px;
+}

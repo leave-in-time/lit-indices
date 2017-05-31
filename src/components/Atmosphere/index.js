@@ -16,6 +16,7 @@ class Atmosphere extends Component {
 					<video
 						src={`../uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
+						loop={this.props.atmosphere.loop}
 						className="atmosphere-video"
 						ref={c => (this.video = c)}
 					/>
@@ -25,6 +26,7 @@ class Atmosphere extends Component {
 					<audio
 						src={`../uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
+						loop={this.props.atmosphere.loop}
 						ref={c => (this.audio = c)}
 					/>
 				);

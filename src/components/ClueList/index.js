@@ -4,6 +4,7 @@ import { List, ListItem } from 'material-ui/List';
 import Snackbar from 'material-ui/Snackbar';
 import IconButton from 'material-ui/IconButton';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import Loop from 'material-ui/svg-icons/av/loop';
 
 import C from '../../constants';
 import Confirm from '../Confirm';
@@ -68,6 +69,7 @@ class ClueList extends Component {
 								/>
 							: null
 					}
+					leftIcon={clue.atmosphere && clue.loop ? <Loop /> : null}
 					rightIconButton={
 						this.props.admin
 							? <IconButton>

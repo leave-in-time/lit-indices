@@ -62,11 +62,11 @@ class Timer extends Component {
 					muted: true,
 				},
 				() => {
+					this.props.blackCallback();
 					this.props.clockCallback({
 						time: this.state.minutes * 60 + this.state.seconds,
 						muted: this.state.muted,
 					});
-					this.props.blackCallback();
 				}
 			);
 		}

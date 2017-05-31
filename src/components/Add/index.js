@@ -6,6 +6,7 @@ import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
+import Toggle from 'material-ui/Toggle';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
 import FileFileUpload from 'material-ui/svg-icons/file/file-upload';
 
@@ -24,6 +25,7 @@ class Add extends Component {
 			description: '',
 			fileName: '',
 			file: null,
+			loop: false,
 		};
 	}
 
@@ -47,6 +49,7 @@ class Add extends Component {
 			description: '',
 			fileName: '',
 			file: null,
+			loop: false,
 		});
 
 	// handle upload
@@ -59,6 +62,7 @@ class Add extends Component {
 			atmosphere: this.props.atmosphere || false,
 		};
 		if (this.state.file) data.newFile = this.state.file;
+		if (this.props.atmosphere) data.loop = this.state.loop;
 		// and post it to the server
 		this.props.loading();
 		post(data, message => {
@@ -71,6 +75,7 @@ class Add extends Component {
 					description: '',
 					fileName: '',
 					file: null,
+					loop: false,
 				});
 			}, 1000);
 		});
@@ -79,6 +84,10 @@ class Add extends Component {
 	// close the snackbar
 	handleSnackbarClose = () => {
 		this.setState({ snackbar: false, snackbarMessage: '' });
+	};
+
+	handleToggle = (e, v) => {
+		this.setState({ loop: !this.state.loop });
 	};
 
 	render() {
@@ -138,6 +147,13 @@ class Add extends Component {
 						}}
 						className="a-input-desc"
 					/>
+					{this.props.atmosphere &&
+						<Toggle
+							className="a-toggle"
+							label="Média en boucle"
+							toggled={this.state.loop}
+							onToggle={this.handleToggle}
+						/>}
 				</Dialog>
 				<Snackbar
 					open={this.state.snackbar}
