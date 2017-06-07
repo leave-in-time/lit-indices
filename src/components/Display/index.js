@@ -34,13 +34,17 @@ class Display extends Component {
 			this.setState({ clue: null, atmosphere: null });
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
-			this.clueSound.addEventListener(
-				'ended',
-				() => {
-					this.setState({ clue });
-				},
-				{ once: true }
-			);
+			if (clue.type === 'image' || clue.type === 'text' || !clue.type) {
+				this.setState({ clue });
+			} else {
+				this.clueSound.addEventListener(
+					'ended',
+					() => {
+						this.setState({ clue });
+					},
+					{ once: true }
+				);
+			}
 			clue.type && this.clueSound.play();
 			this.forceUpdate();
 		});
