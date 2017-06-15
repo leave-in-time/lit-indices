@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import C from '../../constants';
 
 import './style.css';
 
@@ -14,7 +15,13 @@ class Display extends Component {
 	}
 
 	render() {
-		return <video id="intro" src="../fx/intro.mp4" ref={c => (this.video = c)} />;
+		return (
+			<video
+				id="intro"
+				src={`${C.SERVER_HOST}:${C.SERVER_PORT}/fx/intro.mp4`}
+				ref={c => (this.video = c)}
+			/>
+		);
 	}
 }
 

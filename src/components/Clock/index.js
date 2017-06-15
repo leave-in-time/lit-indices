@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import C from '../../constants';
 
 import './style.css';
 
@@ -32,7 +33,11 @@ class Clock extends Component {
 		return (
 			<div>
 				<div id="clock" className={className} />
-				<audio muted={this.props.muted} src="../fx/tick.mp3" ref={c => (this.tick = c)} />
+				<audio
+					muted={this.props.muted}
+					src={`${C.SERVER_HOST}:${C.SERVER_PORT}/fx/tick.mp3`}
+					ref={c => (this.tick = c)}
+				/>
 			</div>
 		);
 	}

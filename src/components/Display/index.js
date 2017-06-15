@@ -115,7 +115,10 @@ class Display extends Component {
 				{this.state.black && <div className="black" />}
 				<audio
 					id="sound"
-					src={`../uploads/${this.props.conf.clueSound}` || '../fx/bell.mp3'}
+					src={
+						`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.conf.clueSound}` ||
+							`${C.SERVER_HOST}:${C.SERVER_PORT}/fx/bell.mp3`
+					}
 					ref={c => (this.clueSound = c)}
 				/>
 			</div>

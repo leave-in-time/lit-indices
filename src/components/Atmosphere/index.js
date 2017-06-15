@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import C from '../../constants';
 
 import './style.css';
 
@@ -14,7 +15,7 @@ class Atmosphere extends Component {
 			case 'video':
 				return (
 					<video
-						src={`../uploads/${this.props.atmosphere.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
 						loop={this.props.atmosphere.loop}
 						className="atmosphere-video"
@@ -24,7 +25,7 @@ class Atmosphere extends Component {
 			case 'audio':
 				return (
 					<audio
-						src={`../uploads/${this.props.atmosphere.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.atmosphere.fileName}`}
 						autoPlay
 						loop={this.props.atmosphere.loop}
 						ref={c => (this.audio = c)}

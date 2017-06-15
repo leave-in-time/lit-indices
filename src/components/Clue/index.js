@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import C from '../../constants';
 
 import './style.css';
 
@@ -14,7 +15,7 @@ class Clue extends Component {
 			case 'image':
 				return (
 					<img
-						src={`../uploads/${this.props.clue.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue.fileName}`}
 						alt={this.props.clue.description}
 						className="clue-image"
 					/>
@@ -22,7 +23,7 @@ class Clue extends Component {
 			case 'video':
 				return (
 					<video
-						src={`../uploads/${this.props.clue.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue.fileName}`}
 						autoPlay
 						className="clue-video"
 						ref={c => (this.video = c)}
@@ -31,7 +32,7 @@ class Clue extends Component {
 			case 'audio':
 				return (
 					<audio
-						src={`../uploads/${this.props.clue.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue.fileName}`}
 						autoPlay
 						ref={c => (this.audio = c)}
 					/>
