@@ -24,8 +24,8 @@ class Display extends Component {
 			black: false,
 		};
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
-		this.socket.on('black', () => {
-			this.setState({ black: true, clue: {} });
+		this.socket.on('black', isBlack => {
+			this.setState({ black: isBlack, clue: {} });
 		});
 		this.socket.on('intro', () => {
 			this.setState({ intro: true, black: false });

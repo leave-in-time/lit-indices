@@ -3,6 +3,7 @@ import IconButton from 'material-ui/IconButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 import Start from 'material-ui/svg-icons/av/video-library';
 import End from 'material-ui/svg-icons/av/stop';
 import Play from 'material-ui/svg-icons/av/play-arrow';
@@ -29,6 +30,8 @@ class Timer extends Component {
 			muted: true,
 			nameDialog: false,
 			name: '',
+			intro: true,
+			resetChrono: true,
 		};
 		// keep the display clock in sync
 		this.props.clockCallback({
@@ -57,12 +60,12 @@ class Timer extends Component {
 				{
 					name: '',
 					nameDialog: true,
-					minutes: 60,
-					seconds: 0,
 					muted: true,
+					intro: true,
+					resetChrono: true,
 				},
 				() => {
-					this.props.blackCallback();
+					this.props.blackCallback(true);
 					this.props.clockCallback({
 						time: this.state.minutes * 60 + this.state.seconds,
 						muted: this.state.muted,
@@ -175,9 +178,31 @@ class Timer extends Component {
 				nameDialog: false,
 			},
 			() => {
-				this.props.introCallback(this.state.name);
+				if (this.state.resetChrono) {
+					this.setState(
+						{
+							minutes: 60,
+							seconds: 0,
+						},
+						() => {
+							this.props.clockCallback({
+								time: this.state.minutes * 60 + this.state.seconds,
+								muted: this.state.muted,
+							});
+						}
+					);
+				}
+				this.props.introCallback(this.state.name, this.state.intro);
 			}
 		);
+	};
+
+	handleIntroCheck = (e, checked) => {
+		this.setState({ intro: checked });
+	};
+
+	handleResetChrono = (e, checked) => {
+		this.setState({ resetChrono: checked });
 	};
 
 	render() {
@@ -275,6 +300,18 @@ class Timer extends Component {
 						hintText="Votre nom"
 						value={this.state.name}
 						onChange={this.handleName}
+					/>
+					<Checkbox
+						label="Lancer l'intro"
+						checked={this.state.intro}
+						className="timer-checkbox"
+						onCheck={this.handleIntroCheck}
+					/>
+					<Checkbox
+						label="Remettre le chrono à 60 minutes"
+						checked={this.state.resetChrono}
+						className="timer-checkbox"
+						onCheck={this.handleResetChrono}
 					/>
 				</Dialog>
 			</div>

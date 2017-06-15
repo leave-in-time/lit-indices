@@ -203,8 +203,8 @@ db.once('open', () => {
 			socket.leave(roomId);
 		});
 
-		socket.on('send black', roomId => {
-			socket.broadcast.to(roomId).emit('black');
+		socket.on('send black', data => {
+			socket.broadcast.to(data.roomId).emit('black', data.isBlack);
 		});
 
 		socket.on('send intro', data => {
@@ -212,8 +212,10 @@ db.once('open', () => {
 			currentStat.startTime = new Date();
 			currentStat.gameMaster = data.name;
 			currentStat.roomId = data.roomId;
-			socket.broadcast.to(data.roomId).emit('intro');
+			if (data.intro) socket.broadcast.to(data.roomId).emit('intro');
+			else io.sockets.in(`admin-${data.roomId}`).emit('start');
 		});
+
 		socket.on('send clue', clue => {
 			console.log(`Clue sent: ${clue} at ${currentTime}`);
 			if (clue.type) {
@@ -226,6 +228,7 @@ db.once('open', () => {
 			}
 			socket.broadcast.to(clue.roomId).emit('clue', clue);
 		});
+
 		socket.on('send atmosphere', atmosphere => {
 			console.log(`Atmosphere sent: ${atmosphere} at ${currentTime}`);
 			currentStat.events.push({
@@ -236,10 +239,12 @@ db.once('open', () => {
 			});
 			socket.broadcast.to(atmosphere.roomId).emit('atmosphere', atmosphere);
 		});
+
 		socket.on('send clock', data => {
 			currentTime = data.time;
 			socket.broadcast.to(data.roomId).emit('clock', data);
 		});
+
 		socket.on('send end', data => {
 			console.log(`Game ended at ${currentTime}, gameover: ${data.gameover}`);
 			socket.broadcast.to(data.roomId).emit('end', data.gameover);
@@ -251,9 +256,11 @@ db.once('open', () => {
 				currentStat.events = [];
 			});
 		});
+
 		socket.on('send volume', data => {
 			socket.broadcast.to(data.roomId).emit('volume', data.volume);
 		});
+
 		socket.on('intro end', roomId => {
 			socket.broadcast.to(`admin-${roomId}`).emit('start');
 		});

@@ -28,6 +28,7 @@ class Room extends Component {
 		this.admin = this.props.match.url.startsWith('/JBJU2A/');
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('start', () => {
+			this.handleBlack(false);
 			this.setState({ timer: true });
 		});
 		this.socket.emit('admin', this.props.match.params.roomId);
@@ -38,14 +39,18 @@ class Room extends Component {
 		getConf(this.props.match.params.roomId);
 	}
 
-	handleBlack = () => {
-		this.socket.emit('send black', this.props.match.params.roomId);
+	handleBlack = isBlack => {
+		this.socket.emit('send black', {
+			roomId: this.props.match.params.roomId,
+			isBlack,
+		});
 	};
 
-	handleIntroStart = name => {
+	handleIntroStart = (name, intro) => {
 		this.socket.emit('send intro', {
 			roomId: this.props.match.params.roomId,
 			name,
+			intro,
 		});
 	};
 

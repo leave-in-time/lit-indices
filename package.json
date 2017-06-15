@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "mv build/uploads . && rm -rf build && react-scripts build && rm -rf build/uploads && mv uploads build ",
     "eject": "react-scripts eject",
     "prettier": "find src -name '*.js' | xargs prettier --print-width 100 --tab-width 4 --use-tabs --single-quote --trailing-comma es5 --write src/**/**.js"
   }
