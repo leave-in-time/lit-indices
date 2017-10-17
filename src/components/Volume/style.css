@@ -5,7 +5,7 @@
 	border-radius: 1px;
 }
 
-.volume-holder div[value] > div {
+.volume-holder > div > div {
 	margin: 0!important;
 }
 
