@@ -5,6 +5,10 @@
 - mongodb
 - git
 
+# nvm
+
+The server is running with node v8.7.0: `nvm i v8.7.0`
+
 # Mongo
 
 Install mongo: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/#install-mongodb-community-edition
