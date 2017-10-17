@@ -20,4 +20,6 @@ Install it as a service: `pm2 startup`
 
 `mongodump` and `mongorestore`
 
-The server should be now running.
+# Up and running
+
+The server should be now running. user: lit / password: lit2017
