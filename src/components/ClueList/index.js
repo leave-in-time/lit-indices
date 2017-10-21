@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import Avatar from 'material-ui/Avatar';
 import { List, ListItem } from 'material-ui/List';
 import Snackbar from 'material-ui/Snackbar';
@@ -9,7 +10,41 @@ import Loop from 'material-ui/svg-icons/av/loop';
 import C from '../../constants';
 import Confirm from '../Confirm';
 import removeClue from '../../services/removeClue';
+import reorderClues from '../../services/reorderClues';
 import './style.css';
+
+const SortableItem = SortableElement(({ value, ctx }) => {
+	return (
+		<ListItem
+			key={value._id}
+			primaryText={value.description}
+			leftAvatar={
+				value.type === 'image' ? (
+					<Avatar src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${value.fileName}`} />
+				) : null
+			}
+			leftIcon={value.atmosphere && value.loop ? <Loop /> : null}
+			rightIconButton={
+				ctx.props.admin ? (
+					<IconButton>
+						<ContentClear onTouchTap={ctx.handleClear.bind(ctx, value._id)} />
+					</IconButton>
+				) : null
+			}
+			onTouchTap={ctx.handleEmit.bind(ctx, value)}
+		/>
+	);
+});
+
+const SortableList = SortableContainer(({ items, ctx }) => {
+	return (
+		<List>
+			{items.map((value, index) => (
+				<SortableItem index={index} key={value._id} value={value} ctx={ctx} />
+			))}
+		</List>
+	);
+});
 
 class ClueList extends Component {
 	constructor(props) {
@@ -24,6 +59,7 @@ class ClueList extends Component {
 
 	handleEmit = clue => {
 		const channel = this.props.atmosphere ? 'send atmosphere' : 'send clue';
+		console.log(clue);
 		this.props.socket.emit(channel, clue);
 	};
 
@@ -37,7 +73,7 @@ class ClueList extends Component {
 
 	// confirm suppression
 	handleConfirm = () => {
-		removeClue(this.state.clearId, message => {
+		removeClue(this.state.clearId, this.props.roomId, message => {
 			this.setState({
 				dialog: false,
 				snackbar: true,
@@ -56,38 +92,29 @@ class ClueList extends Component {
 		this.setState({ snackbar: false, snackbarMessage: '' });
 	};
 
+	// sort the clues
+	onSortEnd = ({ oldIndex, newIndex }) => {
+		reorderClues(
+			oldIndex,
+			newIndex,
+			this.props.type,
+			this.props.atmosphere || false,
+			this.props.roomId,
+			message => {
+				this.setState({ snackbar: true, snackbarMessage: message });
+			}
+		);
+	};
+
 	render() {
-		const items = this.props.clues.map(clue => {
-			return (
-				<ListItem
-					key={clue._id}
-					primaryText={clue.description}
-					leftAvatar={
-						clue.type === 'image'
-							? <Avatar
-									src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${clue.fileName}`}
-								/>
-							: null
-					}
-					leftIcon={clue.atmosphere && clue.loop ? <Loop /> : null}
-					rightIconButton={
-						this.props.admin
-							? <IconButton>
-									<ContentClear
-										onTouchTap={this.handleClear.bind(this, clue._id)}
-									/>
-								</IconButton>
-							: null
-					}
-					onTouchTap={this.handleEmit.bind(this, clue)}
-				/>
-			);
-		});
 		return (
 			<div className="cl-container">
-				<List>
-					{items}
-				</List>
+				<SortableList
+					items={this.props.clues}
+					ctx={this}
+					pressDelay={200}
+					onSortEnd={this.onSortEnd}
+				/>
 				<Confirm
 					open={this.state.dialog}
 					handleConfirm={this.handleConfirm}

@@ -10,6 +10,7 @@ const async = require('async');
 const Clue = require('./clue');
 const Conf = require('./conf');
 const Stat = require('./stat');
+const CluesOrder = require('./cluesOrder');
 
 const processStats = require('./processStats');
 
@@ -116,9 +117,12 @@ app.delete('/api/room/:roomId', (req, res) => {
 			err => {
 				Clue.remove({ roomId: req.params.roomId }, err => {
 					// TODO: handle error
-					Conf.remove({ roomId: req.params.roomId }, err => {
-						// TODO: handle error 500
-						res.status(200).send();
+					CluesOrder.remove({ roomId: req.params.roomId }, err => {
+						// TODO: handle error
+						Conf.remove({ roomId: req.params.roomId }, err => {
+							// TODO: handle error 500
+							res.status(200).send();
+						});
 					});
 				});
 			}
@@ -128,9 +132,14 @@ app.delete('/api/room/:roomId', (req, res) => {
 
 // get clues for a given room
 app.get('/api/room/:roomId', (req, res) => {
-	Clue.find({ roomId: req.params.roomId }, (err, clues) => {
-		// TODO: handle error 500
-		res.status(200).send(clues);
+	CluesOrder.findOne({ roomId: req.params.roomId }, (err, cluesOrder) => {
+		Clue.find({ roomId: req.params.roomId }, (err, clues) => {
+			// TODO: handle error 500
+			if (cluesOrder) {
+				const orderedClues = cluesOrder.order.map(o => clues.find(e => e._id == o));
+				res.status(200).send(orderedClues);
+			} else res.status(200).send(clues);
+		});
 	});
 });
 
@@ -145,6 +154,27 @@ app.delete('/api/clue/:clueId', (req, res) => {
 				});
 			} else res.status(200).send();
 		});
+	});
+});
+
+// order of clues
+app.post('/api/cluesOrder', (req, res) => {
+	const form = new formidable.IncomingForm();
+	form.keepExtensions = true;
+	form.parse(req, (err, fields, files) => {
+		if (err) res.status(500).send(err);
+		else {
+			const values = Object.assign({}, fields);
+			values.order = fields.order.split(',');
+			CluesOrder.remove({ roomId: values.roomId }, (err, result) => {
+				// TODO: handle error 500
+				const cluesOrder = new CluesOrder(values);
+				cluesOrder.save((err, saved) => {
+					if (err) res.status(500).send(err);
+					else res.status(200).json(saved);
+				});
+			});
+		}
 	});
 });
 

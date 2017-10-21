@@ -1,5 +1,6 @@
 import C from '../constants';
 import { store } from '../store';
+import postCluesOrder from './postCluesOrder';
 import { addClue } from '../actions/clues';
 
 const url = `${C.SERVER_HOST}:${C.SERVER_PORT}/api/upload/clue`;
@@ -14,7 +15,9 @@ const post = (data, cb) => {
 			if (res.status === 200) {
 				store.dispatch(addClue(json));
 				const message = data.atmosphere ? 'Ambiance ajoutée !' : 'Indice ajouté !';
-				cb(message);
+				postCluesOrder(data.roomId, () => {
+					cb(message);
+				});
 			} else cb("Problème lors de l'ajout, veuillez réessayer.");
 		});
 	});

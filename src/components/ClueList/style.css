@@ -1,8 +1,8 @@
 .cl-container {
-	height: 80%;
+	height: calc(100% - 34px);
 	overflow-y: scroll;
 }
 
 .cl-container > div {
-	padding: 0!important;
+	padding: 0 !important;
 }

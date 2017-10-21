@@ -26,3 +26,15 @@ export const removeClue = clueId => {
 		});
 	};
 };
+
+export const reorderClues = (oldIndex, newIndex, clueType, atmosphere) => {
+	return (dispatch, getState) => {
+		dispatch({
+			type: C.REORDER_CLUES,
+			oldIndex,
+			newIndex,
+			clueType,
+			atmosphere,
+		});
+	};
+};
