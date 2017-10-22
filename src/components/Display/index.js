@@ -22,6 +22,7 @@ class Display extends Component {
 			muted: true,
 			volume: 1.0,
 			black: false,
+			fadeAtmosphere: '',
 		};
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('black', isBlack => {
@@ -31,27 +32,31 @@ class Display extends Component {
 			this.setState({ intro: true, black: false });
 		});
 		this.socket.on('clue', clue => {
-			this.setState({ clue: null, atmosphere: null });
-			this.clueSound.pause();
-			this.clueSound.currentTime = 0;
-			if (clue.type === 'image' || clue.type === 'text' || !clue.type) {
-				this.setState({ clue });
+			if (clue.clearAtmosphere) {
+				this.setState({ atmosphere: null });
 			} else {
-				this.clueSound.addEventListener(
-					'ended',
-					() => {
-						this.setState({ clue });
-					},
-					{ once: true }
-				);
+				this.setState({ clue: null });
+				this.clueSound.pause();
+				this.clueSound.currentTime = 0;
+				if (clue.type === 'image' || clue.type === 'text' || !clue.type) {
+					this.setState({ clue, fadeAtmosphere: 'up' });
+				} else {
+					this.clueSound.addEventListener(
+						'ended',
+						() => {
+							this.setState({ clue, fadeAtmosphere: 'down' });
+						},
+						{ once: true }
+					);
+				}
+				clue.type && this.clueSound.play();
+				this.forceUpdate();
 			}
-			clue.type && this.clueSound.play();
-			this.forceUpdate();
 		});
 		this.socket.on('atmosphere', atmosphere => {
 			this.clueSound.pause();
 			this.clueSound.currentTime = 0;
-			this.setState({ atmosphere, clue: {} });
+			this.setState({ atmosphere });
 		});
 		this.socket.on('clock', ({ time, muted }) => {
 			this.setState({ time, muted });
@@ -97,27 +102,34 @@ class Display extends Component {
 		});
 	};
 
+	clueEnd = () => {
+		// TODO: clear clue?
+		this.setState({ fadeAtmosphere: 'up' });
+	};
+
 	render() {
 		return (
 			<div id="display">
-				{this.state.intro &&
-					<Intro endCallback={this.endCallback} volume={this.state.volume} />}
-				{!this.state.intro &&
-					<Clock
-						time={this.state.time}
-						orange={900}
-						red={300}
-						muted={this.state.muted}
-					/>}
-				<Clue clue={this.state.clue} volume={this.state.volume} />
-				{this.state.atmosphere &&
-					<Atmosphere atmosphere={this.state.atmosphere} volume={this.state.volume} />}
+				{this.state.intro && (
+					<Intro endCallback={this.endCallback} volume={this.state.volume} />
+				)}
+				{!this.state.intro && (
+					<Clock time={this.state.time} orange={900} red={300} muted={this.state.muted} />
+				)}
+				<Clue clue={this.state.clue} volume={this.state.volume} clueEnd={this.clueEnd} />
+				{this.state.atmosphere && (
+					<Atmosphere
+						atmosphere={this.state.atmosphere}
+						volume={this.state.volume}
+						fade={this.state.fadeAtmosphere}
+					/>
+				)}
 				{this.state.black && <div className="black" />}
 				<audio
 					id="sound"
 					src={
 						`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.conf.clueSound}` ||
-							`${C.SERVER_HOST}:${C.SERVER_PORT}/fx/bell.mp3`
+						`${C.SERVER_HOST}:${C.SERVER_PORT}/fx/bell.mp3`
 					}
 					ref={c => (this.clueSound = c)}
 				/>

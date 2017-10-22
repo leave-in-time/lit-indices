@@ -9,19 +9,33 @@
 	display: none;
 }
 
-#clock .flip-clock-dot,
+#clock .flip {
+	width: 10px !important;
+}
+
 #clock .flip .inn {
-	background-color: #19c37e;
+	background-color: #000;
 }
 
-#clock.orange .flip-clock-dot,
+#clock .flip-clock-dot {
+	background-color: #00ff43;
+}
+#clock .flip .inn {
+	color: #00ff43;
+}
+
+#clock.orange .flip-clock-dot {
+	background-color: #ffb100;
+}
 #clock.orange .flip .inn {
-	background-color: #c37919;
+	color: #ffb100;
 }
 
-#clock.red .flip-clock-dot,
+#clock.red .flip-clock-dot {
+	background-color: #ff0000;
+}
 #clock.red .flip .inn {
-	background-color: #980f0f;
+	color: #ff0000;
 }
 
 #clock .flip .up::after {

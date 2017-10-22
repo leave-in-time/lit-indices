@@ -80,7 +80,9 @@ app.post('/api/upload/conf', (req, res) => {
 
 // get room configuration for the given ip
 app.get('/api/conf', (req, res) => {
-	const ip = req.ip.startsWith('::ffff:') ? req.ip.split('::ffff:')[1] : req.ip;
+	const ip = req.ip.startsWith('::ffff:')
+		? req.ip.split('::ffff:')[1]
+		: req.ip.startsWith('::1') ? '127.0.0.1' : req.ip;
 	Conf.findOne({ ip }, (err, conf) => {
 		res.status(200).send(conf);
 	});
@@ -204,7 +206,7 @@ app.get('/api/stats/:start/:end', (req, res) => {
 // mongoose configuration
 // ---------------------
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/lit-indices');
+mongoose.connect('mongodb://localhost/lit-indices', { useMongoClient: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
@@ -221,15 +223,15 @@ db.once('open', () => {
 		};
 		let currentTime;
 		socket.on('admin', roomId => {
-			console.log(`An admin is joining admin-${roomId}`);
+			// console.log(`An admin is joining admin-${roomId}`);
 			socket.join(`admin-${roomId}`);
 		});
 		socket.on('display', roomId => {
-			console.log(`A display is joining ${roomId}`);
+			// console.log(`A display is joining ${roomId}`);
 			socket.join(roomId);
 		});
 		socket.on('leave', roomId => {
-			console.log(`A display is leaving ${roomId}`);
+			// console.log(`A display is leaving ${roomId}`);
 			socket.leave(roomId);
 		});
 
@@ -238,7 +240,7 @@ db.once('open', () => {
 		});
 
 		socket.on('send intro', data => {
-			console.log(`Game started: ${data.roomId} by ${data.name}`);
+			// console.log(`Game started: ${data.roomId} by ${data.name}`);
 			currentStat.startTime = new Date();
 			currentStat.gameMaster = data.name;
 			currentStat.roomId = data.roomId;
@@ -247,7 +249,7 @@ db.once('open', () => {
 		});
 
 		socket.on('send clue', clue => {
-			console.log(`Clue sent: ${clue} at ${currentTime}`);
+			// console.log(`Clue sent: ${clue} at ${currentTime}`);
 			if (clue.type) {
 				currentStat.events.push({
 					type: 'indice',
@@ -260,7 +262,7 @@ db.once('open', () => {
 		});
 
 		socket.on('send atmosphere', atmosphere => {
-			console.log(`Atmosphere sent: ${atmosphere} at ${currentTime}`);
+			// console.log(`Atmosphere sent: ${atmosphere} at ${currentTime}`);
 			currentStat.events.push({
 				type: 'atmosphere',
 				time: currentTime,
@@ -276,7 +278,7 @@ db.once('open', () => {
 		});
 
 		socket.on('send end', data => {
-			console.log(`Game ended at ${currentTime}, gameover: ${data.gameover}`);
+			// console.log(`Game ended at ${currentTime}, gameover: ${data.gameover}`);
 			socket.broadcast.to(data.roomId).emit('end', data.gameover);
 			currentStat.endTime = currentTime;
 			currentStat.gameover = data.gameover;

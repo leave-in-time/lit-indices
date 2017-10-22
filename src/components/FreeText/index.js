@@ -15,6 +15,9 @@ class FreeText extends Component {
 	}
 
 	handleChange = event => this.setState({ value: event.target.value });
+	handleKeyPress = event => {
+		if (event.key === 'Enter') this.handleSend();
+	};
 	handleClear = () => this.setState({ value: '' });
 	handleSend = () => {
 		if (this.state.value.length) {
@@ -36,6 +39,7 @@ class FreeText extends Component {
 					className="ft-input"
 					value={this.state.value}
 					onChange={this.handleChange}
+					onKeyPress={this.handleKeyPress}
 				/>
 				<RaisedButton
 					icon={<ContentClear color="#ffffff" />}

@@ -3,7 +3,7 @@ import C from '../../constants';
 
 import './style.css';
 
-class Display extends Component {
+class Intro extends Component {
 	componentDidMount() {
 		this.video.addEventListener('ended', () => this.props.endCallback(), { once: true });
 		this.video.volume = this.props.volume;
@@ -25,4 +25,4 @@ class Display extends Component {
 	}
 }
 
-export default Display;
+export default Intro;

@@ -25,11 +25,15 @@ class Room extends Component {
 		this.state = {
 			timer: false,
 		};
+		this.canSendTimer = true;
 		this.admin = this.props.match.url.startsWith('/JBJU2A/');
 		this.socket = io(`${C.SERVER_HOST}:${C.SERVER_PORT}`);
 		this.socket.on('start', () => {
-			this.handleBlack(false);
-			this.setState({ timer: true });
+			if (this.canSendTimer) {
+				this.canSendTimer = false;
+				this.handleBlack(false);
+				this.setState({ timer: true }, () => (this.canSendTimer = true));
+			}
 		});
 		this.socket.emit('admin', this.props.match.params.roomId);
 	}
@@ -74,6 +78,13 @@ class Room extends Component {
 		});
 	};
 
+	handleClearAtmosphere = () => {
+		this.socket.emit('send clue', {
+			roomId: this.props.match.params.roomId,
+			clearAtmosphere: true,
+		});
+	};
+
 	handleVolume = volume => {
 		this.socket.emit('send volume', {
 			roomId: this.props.match.params.roomId,
@@ -100,9 +111,14 @@ class Room extends Component {
 					</div>
 					<div className="r-clear">
 						<RaisedButton
-							label="Enelver l'indice/ambiance"
+							label="Enelver l'indice"
 							secondary
 							onTouchTap={this.handleClearClue}
+						/>
+						<RaisedButton
+							label="Enelver l'ambiance"
+							primary
+							onTouchTap={this.handleClearAtmosphere}
 						/>
 					</div>
 					<Timer

@@ -5,8 +5,14 @@ import './style.css';
 
 class Clue extends Component {
 	componentDidUpdate() {
-		if (this.video) this.video.volume = this.props.volume;
-		if (this.audio) this.audio.volume = this.props.volume;
+		if (this.video) {
+			this.video.volume = this.props.volume;
+			this.video.addEventListener('ended', this.props.clueEnd, { once: true });
+		}
+		if (this.audio) {
+			this.audio.volume = this.props.volume;
+			this.audio.addEventListener('ended', this.props.clueEnd, { once: true });
+		}
 	}
 
 	renderClue = () => {
@@ -15,7 +21,8 @@ class Clue extends Component {
 			case 'image':
 				return (
 					<img
-						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue
+							.fileName}`}
 						alt={this.props.clue.description}
 						className="clue-image"
 					/>
@@ -23,7 +30,8 @@ class Clue extends Component {
 			case 'video':
 				return (
 					<video
-						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue
+							.fileName}`}
 						autoPlay
 						className="clue-video"
 						ref={c => (this.video = c)}
@@ -32,7 +40,8 @@ class Clue extends Component {
 			case 'audio':
 				return (
 					<audio
-						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue.fileName}`}
+						src={`${C.SERVER_HOST}:${C.SERVER_PORT}/uploads/${this.props.clue
+							.fileName}`}
 						autoPlay
 						ref={c => (this.audio = c)}
 					/>
@@ -45,11 +54,7 @@ class Clue extends Component {
 	};
 
 	render() {
-		return (
-			<div className="clue-holder">
-				{this.renderClue()}
-			</div>
-		);
+		return <div className="clue-holder">{this.renderClue()}</div>;
 	}
 }
 

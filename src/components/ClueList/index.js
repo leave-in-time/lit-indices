@@ -59,7 +59,6 @@ class ClueList extends Component {
 
 	handleEmit = clue => {
 		const channel = this.props.atmosphere ? 'send atmosphere' : 'send clue';
-		console.log(clue);
 		this.props.socket.emit(channel, clue);
 	};
 

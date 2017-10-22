@@ -21,8 +21,8 @@ class Clock extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		this.clock.setTime(nextProps.time + 1);
-		this.clock.flip();
+		this.clock.setTime(nextProps.time);
+		// this.clock.flip();
 		this.tick.play();
 	}
 

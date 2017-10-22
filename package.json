@@ -33,8 +33,10 @@
 	"scripts": {
 		"start": "react-scripts start",
 		"server": "NODE_ENV=production node src/server",
-		"build": "mv build/uploads . && rm -rf build && react-scripts build && rm -rf build/uploads && mv uploads build ",
+		"build":
+			"mv build/uploads . && rm -rf build && NODE_ENV=production react-scripts build && rm -rf build/uploads && mv uploads build ",
 		"eject": "react-scripts eject",
-		"prettier": "find src -name '*.js' | xargs prettier --print-width 100 --tab-width 4 --use-tabs --single-quote --trailing-comma es5 --write src/**/**.js"
+		"prettier":
+			"find src -name '*.js' | xargs prettier --print-width 100 --tab-width 4 --use-tabs --single-quote --trailing-comma es5 --write src/**/**.js"
 	}
 }
