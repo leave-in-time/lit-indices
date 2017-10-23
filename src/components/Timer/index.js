@@ -228,6 +228,7 @@ class Timer extends Component {
 			<div className="timer">
 				<IconButton
 					tooltip={this.state.started ? 'Terminer la partie' : 'Démarrer la partie'}
+					disabled={this.state.started && !this.state.running}
 					onTouchTap={this.handleStartStop}
 				>
 					{this.state.started ? <End /> : <Start />}
