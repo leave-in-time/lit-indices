@@ -111,12 +111,12 @@ class Room extends Component {
 					</div>
 					<div className="r-clear">
 						<RaisedButton
-							label="Enelver l'indice"
+							label="Enl. ind."
 							secondary
 							onTouchTap={this.handleClearClue}
 						/>
 						<RaisedButton
-							label="Enelver l'ambiance"
+							label="Enl. amb."
 							primary
 							onTouchTap={this.handleClearAtmosphere}
 						/>
